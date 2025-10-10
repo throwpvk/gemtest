@@ -1,457 +1,147 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Top-Down Scroller Game</title>
+    <title>Ảnh cuộn ngang responsive</title>
     <style>
+      html,
       body {
         margin: 0;
         overflow: hidden;
-        background: #87ceeb;
-        font-family: Arial, sans-serif;
-      }
-
-      #game-container {
-        position: relative;
-        width: 100vw;
+        background: linear-gradient(to top, gray 0 200px, skyblue 200px 100%);
         height: 100vh;
-        overflow: hidden;
       }
 
-      #map {
+      .container {
         position: absolute;
-        top: 0;
+        bottom: 200px;
         left: 0;
-        width: 4000px;
-        height: 4000px;
-        transition: transform 0.016s linear; /* For 60fps smoothness */
-        will-change: transform;
+        width: 100%;
+        display: flex;
+        justify-content: center;
       }
 
-      #background-layer {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 4000px;
-        height: 4000px;
-        background: linear-gradient(
-          to bottom,
-          #90ee90 0%,
-          #228b22 100%
-        ); /* Ground */
-        z-index: 1;
+      .track {
+        display: flex;
+        transition: transform 0.2s ease-out;
       }
 
-      #midground-layer {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 4000px;
-        height: 4000px;
-        z-index: 2;
+      .track img {
+        display: block;
+        flex-shrink: 0;
+        width: auto;
+        height: auto;
       }
 
-      #foreground-layer {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 4000px;
-        height: 4000px;
-        z-index: 3;
+      /* Responsive: scale ảnh trên mobile */
+      @media (max-width: 1024px) {
+        .track img {
+          width: calc(512px / 6);
+        }
+      }
+      @media (max-width: 768px) {
+        .track img {
+          width: calc(512px / 6);
+        }
       }
 
-      .tree {
-        position: absolute;
-        width: 40px;
-        height: 40px;
-        background: green;
-        border-radius: 50%;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      }
-
-      .house {
-        position: absolute;
-        width: 60px;
-        height: 60px;
-        background: brown;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      }
-
-      .npc {
-        position: absolute;
-        width: 30px;
-        height: 30px;
-        background: blue;
-        border-radius: 50%;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      }
-
-      .rock {
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        background: gray;
-        border-radius: 20%;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      }
-
-      .bush {
-        position: absolute;
-        width: 30px;
-        height: 30px;
-        background: darkgreen;
-        border-radius: 50%;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      }
-
-      #player {
+      /* nút chạm overlay */
+      .btn {
         position: fixed;
         top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 40px;
-        height: 40px;
-        background: red;
-        border-radius: 50%;
-        z-index: 10;
-        animation: player-blink 1s infinite;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      }
-
-      @keyframes player-blink {
-        0% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.8;
-        }
-        100% {
-          opacity: 1;
-        }
-      }
-
-      #dialogue {
-        position: fixed;
-        top: 20%;
-        left: 50%;
-        transform: translateX(-50%);
-        background: white;
-        padding: 20px;
-        border: 2px solid black;
-        border-radius: 10px;
-        z-index: 20;
-        opacity: 0;
-        transition: opacity 0.5s ease;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        display: none;
-      }
-
-      #dialogue.show {
-        opacity: 1;
-        display: block;
-      }
-
-      #joystick {
-        position: fixed;
-        bottom: 20px;
-        left: 20px;
-        width: 100px;
+        transform: translateY(-50%);
+        width: 60px;
         height: 100px;
         background: rgba(0, 0, 0, 0.3);
-        border-radius: 50%;
-        z-index: 15;
+        color: white;
+        font-size: 30px;
+        text-align: center;
+        line-height: 100px;
+        border-radius: 10px;
+        z-index: 1000;
+        user-select: none;
         touch-action: none;
       }
-
-      #joystick-knob {
-        position: absolute;
-        width: 50px;
-        height: 50px;
-        background: #333;
-        border-radius: 50%;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+      .btn-left {
+        left: 10px;
       }
-
-      @media (orientation: portrait) {
-        #rotate-device {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100vw;
-          height: 100vh;
-          background: rgba(0, 0, 0, 0.8);
-          color: white;
-          font-size: 24px;
-          z-index: 100;
-        }
-      }
-
-      @media (orientation: landscape) {
-        #rotate-device {
-          display: none;
-        }
+      .btn-right {
+        right: 10px;
       }
     </style>
   </head>
   <body>
-    <div id="rotate-device">Please rotate your device to landscape mode.</div>
-    <div id="game-container">
-      <div id="map">
-        <div id="background-layer"></div>
-        <div id="midground-layer"></div>
-        <div id="foreground-layer"></div>
-      </div>
-      <div id="player"></div>
-      <div id="dialogue">Xin chào! Đây là hội thoại mẫu.</div>
+    <div class="container">
+      <div class="track" id="track"></div>
     </div>
-    <div id="joystick">
-      <div id="joystick-knob"></div>
-    </div>
+
+    <!-- Nút touch -->
+    <div class="btn btn-left" id="btnLeft">⬅</div>
+    <div class="btn btn-right" id="btnRight">➡</div>
 
     <script>
-      const map = document.getElementById("map");
-      const backgroundLayer = document.getElementById("background-layer");
-      const midgroundLayer = document.getElementById("midground-layer");
-      const foregroundLayer = document.getElementById("foreground-layer");
-      const dialogue = document.getElementById("dialogue");
-      const player = document.getElementById("player");
-      const joystick = document.getElementById("joystick");
-      const joystickKnob = document.getElementById("joystick-knob");
+      const track = document.getElementById("track");
+      const img1 = "img1.png"; // thay ảnh thật
+      const img2 = "img2.png";
+      const total = 1000;
 
-      const mapWidth = 4000;
-      const mapHeight = 4000;
-      let screenWidth = window.innerWidth;
-      let screenHeight = window.innerHeight;
-      const maxTranslateX = -(mapWidth - screenWidth);
-      const maxTranslateY = -(mapHeight - screenHeight);
-      let currentX = 0;
-      let currentY = 0;
-      const speed = 10; // Pixels per frame
-      const parallaxFactor = 0.5;
-      const midgroundParallaxFactor = 0.75;
-
-      let keys = {};
-      let nearNPC = null;
-      let joystickActive = false;
-      let joystickVector = { x: 0, y: 0 };
-
-      // Generate dense objects across the map
-      function generateObjects() {
-        const numTrees = 400;
-        const numHouses = 100;
-        const numNPCs = 30;
-        const numRocks = 300;
-        const numBushes = 300;
-
-        // Add to midground
-        for (let i = 0; i < numTrees; i++) {
-          const tree = document.createElement("div");
-          tree.className = "tree";
-          tree.style.left = `${Math.random() * mapWidth}px`;
-          tree.style.top = `${Math.random() * mapHeight}px`;
-          midgroundLayer.appendChild(tree);
-        }
-
-        for (let i = 0; i < numRocks; i++) {
-          const rock = document.createElement("div");
-          rock.className = "rock";
-          rock.style.left = `${Math.random() * mapWidth}px`;
-          rock.style.top = `${Math.random() * mapHeight}px`;
-          midgroundLayer.appendChild(rock);
-        }
-
-        // Add to foreground
-        for (let i = 0; i < numHouses; i++) {
-          const house = document.createElement("div");
-          house.className = "house";
-          house.style.left = `${Math.random() * mapWidth}px`;
-          house.style.top = `${Math.random() * mapHeight}px`;
-          foregroundLayer.appendChild(house);
-        }
-
-        for (let i = 0; i < numNPCs; i++) {
-          const npc = document.createElement("div");
-          npc.className = "npc";
-          npc.id = `npc${i}`;
-          npc.style.left = `${Math.random() * mapWidth}px`;
-          npc.style.top = `${Math.random() * mapHeight}px`;
-          foregroundLayer.appendChild(npc);
-        }
-
-        for (let i = 0; i < numBushes; i++) {
-          const bush = document.createElement("div");
-          bush.className = "bush";
-          bush.style.left = `${Math.random() * mapWidth}px`;
-          bush.style.top = `${Math.random() * mapHeight}px`;
-          foregroundLayer.appendChild(bush);
-        }
+      for (let i = 0; i < total; i++) {
+        const img = document.createElement("img");
+        img.src = i % 2 === 0 ? img1 : img2;
+        track.appendChild(img);
       }
 
-      generateObjects();
+      let position = 0;
+      let target = 0;
+      let moveSpeed = 32;
 
-      const npcs = document.querySelectorAll(".npc");
-
-      function updatePosition() {
-        // Keyboard movement: Move map opposite to input direction
-        if (keys["ArrowLeft"] || keys["a"]) {
-          currentX = Math.max(currentX - speed, maxTranslateX); // Move map right
-        }
-        if (keys["ArrowRight"] || keys["d"]) {
-          currentX = Math.min(currentX + speed, 0); // Move map left
-        }
-        if (keys["ArrowUp"] || keys["w"]) {
-          currentY = Math.max(currentY - speed, maxTranslateY); // Move map down
-        }
-        if (keys["ArrowDown"] || keys["s"]) {
-          currentY = Math.min(currentY + speed, 0); // Move map up
-        }
-
-        // Joystick movement: Move map opposite to joystick direction
-        if (joystickActive) {
-          currentX = Math.max(
-            Math.min(currentX - joystickVector.x * speed, 0),
-            maxTranslateX
-          );
-          currentY = Math.max(
-            Math.min(currentY - joystickVector.y * speed, 0),
-            maxTranslateY
-          );
-        }
-
-        // Apply transform to layers
-        foregroundLayer.style.transform = `translate(${currentX}px, ${currentY}px)`;
-        midgroundLayer.style.transform = `translate(${
-          currentX * midgroundParallaxFactor
-        }px, ${currentY * midgroundParallaxFactor}px)`;
-        backgroundLayer.style.transform = `translate(${
-          currentX * parallaxFactor
-        }px, ${currentY * parallaxFactor}px)`;
-
-        // Check NPC proximity
-        checkNPCProximity();
+      function updateSpeed() {
+        moveSpeed = window.innerWidth <= 768 ? 32 / 3 : 32;
       }
+      updateSpeed();
+      window.addEventListener("resize", updateSpeed);
 
-      function checkNPCProximity() {
-        const centerX = screenWidth / 2;
-        const centerY = screenHeight / 2;
-        nearNPC = null;
-        npcs.forEach((npc) => {
-          const npcLeft = parseFloat(npc.style.left) + currentX;
-          const npcTop = parseFloat(npc.style.top) + currentY;
-          const distance = Math.sqrt(
-            Math.pow(npcLeft - centerX + npc.offsetWidth / 2, 2) +
-              Math.pow(npcTop - centerY + npc.offsetHeight / 2, 2)
-          );
-          if (distance < 50) {
-            nearNPC = npc;
-          }
-        });
-      }
+      let moveLeft = false;
+      let moveRight = false;
 
-      function showDialogue() {
-        if (nearNPC) {
-          dialogue.classList.add("show");
-        }
-      }
+      // Touch / mouse
+      const btnLeft = document.getElementById("btnLeft");
+      const btnRight = document.getElementById("btnRight");
 
-      function hideDialogue() {
-        dialogue.classList.remove("show");
-      }
+      btnLeft.addEventListener("pointerdown", () => (moveLeft = true));
+      btnLeft.addEventListener("pointerup", () => (moveLeft = false));
+      btnLeft.addEventListener("pointerleave", () => (moveLeft = false));
 
-      // Keyboard controls
+      btnRight.addEventListener("pointerdown", () => (moveRight = true));
+      btnRight.addEventListener("pointerup", () => (moveRight = false));
+      btnRight.addEventListener("pointerleave", () => (moveRight = false));
+
+      // Keyboard
       document.addEventListener("keydown", (e) => {
-        keys[e.key] = true;
-        if (e.key === " ") {
-          showDialogue();
-        }
+        if (e.key === "ArrowLeft") moveLeft = true;
+        if (e.key === "ArrowRight") moveRight = true;
       });
-
       document.addEventListener("keyup", (e) => {
-        keys[e.key] = false;
-        if (e.key === " ") {
-          hideDialogue();
-        }
+        if (e.key === "ArrowLeft") moveLeft = false;
+        if (e.key === "ArrowRight") moveRight = false;
       });
 
-      // Joystick controls
-      function handleJoystickStart(e) {
-        e.preventDefault();
-        joystickActive = true;
+      function animate() {
+        if (moveLeft) target -= moveSpeed;
+        if (moveRight) target += moveSpeed;
+
+        // giới hạn
+        if (target < 0) target = 0;
+        const maxOffset = track.scrollWidth - window.innerWidth;
+        if (target > maxOffset) target = maxOffset;
+
+        position += (target - position) * 0.15;
+        track.style.transform = `translateX(${-position}px)`;
+        requestAnimationFrame(animate);
       }
 
-      function handleJoystickMove(e) {
-        e.preventDefault();
-        if (!joystickActive) return;
-
-        const rect = joystick.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-
-        let touchX, touchY;
-        if (e.type === "touchmove") {
-          touchX = e.touches[0].clientX;
-          touchY = e.touches[0].clientY;
-        } else {
-          touchX = e.clientX;
-          touchY = e.clientY;
-        }
-
-        let dx = touchX - centerX;
-        let dy = touchY - centerY;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        const maxDistance = 50; // Joystick radius
-
-        if (distance > maxDistance) {
-          const scale = maxDistance / distance;
-          dx *= scale;
-          dy *= scale;
-        }
-
-        joystickVector.x = dx / maxDistance;
-        joystickVector.y = dy / maxDistance;
-
-        joystickKnob.style.transform = `translate(${dx - 25}px, ${dy - 25}px)`;
-      }
-
-      function handleJoystickEnd(e) {
-        e.preventDefault();
-        joystickActive = false;
-        joystickVector = { x: 0, y: 0 };
-        joystickKnob.style.transform = `translate(-50%, -50%)`;
-      }
-
-      joystick.addEventListener("touchstart", handleJoystickStart);
-      joystick.addEventListener("touchmove", handleJoystickMove);
-      joystick.addEventListener("touchend", handleJoystickEnd);
-
-      // For desktop testing
-      joystick.addEventListener("mousedown", handleJoystickStart);
-      document.addEventListener("mousemove", handleJoystickMove);
-      document.addEventListener("mouseup", handleJoystickEnd);
-
-      // Game loop
-      function gameLoop() {
-        updatePosition();
-        requestAnimationFrame(gameLoop);
-      }
-
-      gameLoop();
-
-      // Handle resize
-      window.addEventListener("resize", () => {
-        screenWidth = window.innerWidth;
-        screenHeight = window.innerHeight;
-        maxTranslateX = -(mapWidth - screenWidth);
-        maxTranslateY = -(mapHeight - screenHeight);
-        currentX = Math.max(currentX, maxTranslateX);
-        currentY = Math.max(currentY, maxTranslateY);
-      });
+      animate();
     </script>
   </body>
 </html>

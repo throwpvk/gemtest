@@ -1,147 +1,77 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ảnh cuộn ngang responsive</title>
+    <title>Grid Prototype</title>
     <style>
-      html,
       body {
         margin: 0;
-        overflow: hidden;
-        background: linear-gradient(to top, gray 0 200px, skyblue 200px 100%);
-        height: 100vh;
+        background: #b8f7ff;
+        overflow-x: auto;
+        display: flex;
       }
 
-      .container {
-        position: absolute;
-        bottom: 200px;
-        left: 0;
-        width: 100%;
+      #grid-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 150px);
+        grid-auto-rows: 300px;
+        max-width: 2250px;
+      }
+
+      .cell {
         display: flex;
         justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        font-size: 24px;
+        color: #fff;
+        background-image: url("./city/nhà 1 lô.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
       }
 
-      .track {
-        display: flex;
-        transition: transform 0.2s ease-out;
-      }
-
-      .track img {
-        display: block;
-        flex-shrink: 0;
-        width: auto;
-        height: auto;
-      }
-
-      /* Responsive: scale ảnh trên mobile */
-      @media (max-width: 1024px) {
-        .track img {
-          width: calc(512px / 6);
+      @media only screen and (min-width: 600px) {
+        #grid-container {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, 200px);
+          grid-auto-rows: 400px;
+          max-width: 3000px;
         }
-      }
-      @media (max-width: 768px) {
-        .track img {
-          width: calc(512px / 6);
-        }
-      }
 
-      /* nút chạm overlay */
-      .btn {
-        position: fixed;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 60px;
-        height: 100px;
-        background: rgba(0, 0, 0, 0.3);
-        color: white;
-        font-size: 30px;
-        text-align: center;
-        line-height: 100px;
-        border-radius: 10px;
-        z-index: 1000;
-        user-select: none;
-        touch-action: none;
-      }
-      .btn-left {
-        left: 10px;
-      }
-      .btn-right {
-        right: 10px;
+        .cell {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-weight: bold;
+          font-size: 24px;
+          color: #fff;
+          background-image: url("./city/nhà 1 lô.png");
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <div class="track" id="track"></div>
-    </div>
-
-    <!-- Nút touch -->
-    <div class="btn btn-left" id="btnLeft">⬅</div>
-    <div class="btn btn-right" id="btnRight">➡</div>
+    <div id="grid-container"></div>
 
     <script>
-      const track = document.getElementById("track");
-      const img1 = "img1.png"; // thay ảnh thật
-      const img2 = "img2.png";
-      const total = 1000;
+      const gridContainer = document.getElementById("grid-container");
+      const rows = 10; // số row PC
+      const cols = 20; // số cột PC
+      let count = 1;
 
-      for (let i = 0; i < total; i++) {
-        const img = document.createElement("img");
-        img.src = i % 2 === 0 ? img1 : img2;
-        track.appendChild(img);
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const cell = document.createElement("div");
+          cell.classList.add("cell");
+          // cell.textContent = count++;
+          gridContainer.appendChild(cell);
+        }
       }
-
-      let position = 0;
-      let target = 0;
-      let moveSpeed = 32;
-
-      function updateSpeed() {
-        moveSpeed = window.innerWidth <= 768 ? 32 / 3 : 32;
-      }
-      updateSpeed();
-      window.addEventListener("resize", updateSpeed);
-
-      let moveLeft = false;
-      let moveRight = false;
-
-      // Touch / mouse
-      const btnLeft = document.getElementById("btnLeft");
-      const btnRight = document.getElementById("btnRight");
-
-      btnLeft.addEventListener("pointerdown", () => (moveLeft = true));
-      btnLeft.addEventListener("pointerup", () => (moveLeft = false));
-      btnLeft.addEventListener("pointerleave", () => (moveLeft = false));
-
-      btnRight.addEventListener("pointerdown", () => (moveRight = true));
-      btnRight.addEventListener("pointerup", () => (moveRight = false));
-      btnRight.addEventListener("pointerleave", () => (moveRight = false));
-
-      // Keyboard
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "ArrowLeft") moveLeft = true;
-        if (e.key === "ArrowRight") moveRight = true;
-      });
-      document.addEventListener("keyup", (e) => {
-        if (e.key === "ArrowLeft") moveLeft = false;
-        if (e.key === "ArrowRight") moveRight = false;
-      });
-
-      function animate() {
-        if (moveLeft) target -= moveSpeed;
-        if (moveRight) target += moveSpeed;
-
-        // giới hạn
-        if (target < 0) target = 0;
-        const maxOffset = track.scrollWidth - window.innerWidth;
-        if (target > maxOffset) target = maxOffset;
-
-        position += (target - position) * 0.15;
-        track.style.transform = `translateX(${-position}px)`;
-        requestAnimationFrame(animate);
-      }
-
-      animate();
     </script>
   </body>
 </html>

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Japanese Pronunciation Checker</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      h1 {
+        text-align: center;
+        color: #667eea;
+        margin-bottom: 30px;
+        font-size: 2em;
+      }
+
+      .sentence-list {
+        margin-bottom: 30px;
+      }
+
+      .sentence-item {
+        background: #f8f9fa;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: 2px solid transparent;
+      }
+
+      .sentence-item:hover {
+        background: #e9ecef;
+        transform: translateY(-2px);
+      }
+
+      .sentence-item.active {
+        border: 2px solid #667eea;
+        background: #e7e9ff;
+      }
+
+      .sentence-japanese {
+        font-size: 1.3em;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #333;
+      }
+
+      .sentence-romaji {
+        font-size: 0.9em;
+        color: #666;
+        font-style: italic;
+      }
+
+      .sentence-translation {
+        font-size: 0.85em;
+        color: #888;
+        margin-top: 5px;
+      }
+
+      .control-panel {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      .selected-sentence {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #667eea;
+        margin-bottom: 15px;
+        min-height: 40px;
+      }
+
+      .record-btn {
+        background: #667eea;
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        font-size: 1.1em;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .record-btn:hover {
+        background: #5568d3;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+      }
+
+      .record-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .record-btn.recording {
+        background: #e74c3c;
+        animation: pulse 1.5s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      .result {
+        margin-top: 20px;
+        padding: 20px;
+        border-radius: 10px;
+        display: none;
+      }
+
+      .result.show {
+        display: block;
+      }
+
+      .result.excellent {
+        background: #d4edda;
+        border: 2px solid #28a745;
+      }
+
+      .result.good {
+        background: #fff3cd;
+        border: 2px solid #ffc107;
+      }
+
+      .result.poor {
+        background: #f8d7da;
+        border: 2px solid #dc3545;
+      }
+
+      .score {
+        font-size: 2em;
+        font-weight: bold;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .result.excellent .score {
+        color: #28a745;
+      }
+
+      .result.good .score {
+        color: #ff8800;
+      }
+
+      .result.poor .score {
+        color: #dc3545;
+      }
+
+      .transcription {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 10px;
+      }
+
+      .transcription-label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #666;
+      }
+
+      .transcription-text {
+        font-size: 1.1em;
+        color: #333;
+      }
+
+      .status {
+        text-align: center;
+        color: #666;
+        margin-top: 10px;
+        min-height: 20px;
+      }
+
+      .browser-support {
+        background: #fff3cd;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ffc107;
+        color: #856404;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🎌 Japanese Pronunciation Checker</h1>
+
+      <div class="browser-support" id="browserWarning">
+        ⚠️ Web Speech API is not supported in your browser. Please use Chrome,
+        Edge, or Safari.
+      </div>
+
+      <div class="control-panel">
+        <div class="selected-sentence" id="selectedSentence">
+          Select a sentence below to start
+        </div>
+        <button class="record-btn" id="recordBtn" disabled>
+          🎤 Click to Record
+        </button>
+        <div class="status" id="status"></div>
+      </div>
+
+      <div class="result" id="result">
+        <div class="score" id="score"></div>
+        <div class="transcription">
+          <div class="transcription-label">Your pronunciation:</div>
+          <div class="transcription-text" id="yourText"></div>
+        </div>
+        <div class="transcription">
+          <div class="transcription-label">Expected:</div>
+          <div class="transcription-text" id="expectedText"></div>
+        </div>
+      </div>
+
+      <div class="sentence-list" id="sentenceList"></div>
+    </div>
+
+    <script>
+      const sentences = [
+        {
+          jp: "おはようございます",
+          romaji: "Ohayou gozaimasu",
+          en: "Good morning",
+        },
+        { jp: "こんにちは", romaji: "Konnichiwa", en: "Hello" },
+        { jp: "こんばんは", romaji: "Konbanwa", en: "Good evening" },
+        {
+          jp: "ありがとうございます",
+          romaji: "Arigatou gozaimasu",
+          en: "Thank you very much",
+        },
+        { jp: "すみません", romaji: "Sumimasen", en: "Excuse me / I'm sorry" },
+        { jp: "はじめまして", romaji: "Hajimemashite", en: "Nice to meet you" },
+        { jp: "お元気ですか", romaji: "Ogenki desu ka", en: "How are you?" },
+        { jp: "元気です", romaji: "Genki desu", en: "I'm fine" },
+        {
+          jp: "いただきます",
+          romaji: "Itadakimasu",
+          en: "Let's eat (before meal)",
+        },
+        {
+          jp: "ごちそうさまでした",
+          romaji: "Gochisousama deshita",
+          en: "Thank you for the meal",
+        },
+        {
+          jp: "お名前は何ですか",
+          romaji: "Onamae wa nan desu ka",
+          en: "What is your name?",
+        },
+        {
+          jp: "私は学生です",
+          romaji: "Watashi wa gakusei desu",
+          en: "I am a student",
+        },
+        {
+          jp: "日本語が好きです",
+          romaji: "Nihongo ga suki desu",
+          en: "I like Japanese",
+        },
+        { jp: "わかりました", romaji: "Wakarimashita", en: "I understood" },
+        { jp: "わかりません", romaji: "Wakarimasen", en: "I don't understand" },
+        {
+          jp: "もう一度お願いします",
+          romaji: "Mou ichido onegaishimasu",
+          en: "One more time please",
+        },
+        {
+          jp: "トイレはどこですか",
+          romaji: "Toire wa doko desu ka",
+          en: "Where is the toilet?",
+        },
+        { jp: "いくらですか", romaji: "Ikura desu ka", en: "How much is it?" },
+        {
+          jp: "お疲れ様でした",
+          romaji: "Otsukaresama deshita",
+          en: "Good work / Thank you for your hard work",
+        },
+        { jp: "またね", romaji: "Mata ne", en: "See you later" },
+      ];
+
+      let selectedSentence = null;
+      let recognition = null;
+
+      // Check browser support
+      if (
+        !("webkitSpeechRecognition" in window) &&
+        !("SpeechRecognition" in window)
+      ) {
+        document.getElementById("browserWarning").style.display = "block";
+      } else {
+        // Initialize Speech Recognition
+        const SpeechRecognition =
+          window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        recognition.lang = "ja-JP";
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        recognition.onstart = () => {
+          document.getElementById("status").textContent = "🎤 Listening...";
+          document.getElementById("recordBtn").textContent = "⏹️ Recording...";
+          document.getElementById("recordBtn").classList.add("recording");
+        };
+
+        recognition.onend = () => {
+          document.getElementById("recordBtn").textContent =
+            "🎤 Click to Record";
+          document.getElementById("recordBtn").classList.remove("recording");
+          document.getElementById("recordBtn").disabled = false;
+        };
+
+        recognition.onerror = (event) => {
+          document.getElementById("status").textContent =
+            "❌ Error: " + event.error;
+          document.getElementById("recordBtn").classList.remove("recording");
+          document.getElementById("recordBtn").disabled = false;
+        };
+
+        recognition.onresult = (event) => {
+          const transcript = event.results[0][0].transcript;
+          const confidence = event.results[0][0].confidence;
+
+          document.getElementById("status").textContent = "✓ Processing...";
+
+          // Calculate similarity
+          const similarity = calculateSimilarity(
+            normalizeJapanese(transcript),
+            normalizeJapanese(selectedSentence.jp)
+          );
+          const score = Math.round(similarity * 100);
+
+          // Display result
+          displayResult(transcript, selectedSentence.jp, score, confidence);
+        };
+      }
+
+      // Normalize Japanese text for comparison
+      function normalizeJapanese(text) {
+        return text
+          .toLowerCase()
+          .replace(/\s+/g, "")
+          .replace(/[。、！？]/g, "")
+          .trim();
+      }
+
+      // Calculate similarity using Levenshtein distance
+      function calculateSimilarity(str1, str2) {
+        const len1 = str1.length;
+        const len2 = str2.length;
+        const matrix = [];
+
+        if (len1 === 0) return len2 === 0 ? 1 : 0;
+        if (len2 === 0) return 0;
+
+        for (let i = 0; i <= len2; i++) {
+          matrix[i] = [i];
+        }
+
+        for (let j = 0; j <= len1; j++) {
+          matrix[0][j] = j;
+        }
+
+        for (let i = 1; i <= len2; i++) {
+          for (let j = 1; j <= len1; j++) {
+            if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
+              matrix[i][j] = matrix[i - 1][j - 1];
+            } else {
+              matrix[i][j] = Math.min(
+                matrix[i - 1][j - 1] + 1,
+                matrix[i][j - 1] + 1,
+                matrix[i - 1][j] + 1
+              );
+            }
+          }
+        }
+
+        const distance = matrix[len2][len1];
+        const maxLen = Math.max(len1, len2);
+        return 1 - distance / maxLen;
+      }
+
+      // Display result with color coding
+      function displayResult(userText, expectedText, score, confidence) {
+        const resultDiv = document.getElementById("result");
+        const scoreDiv = document.getElementById("score");
+        const yourTextDiv = document.getElementById("yourText");
+        const expectedTextDiv = document.getElementById("expectedText");
+
+        yourTextDiv.textContent = userText;
+        expectedTextDiv.textContent = expectedText;
+        scoreDiv.textContent = `Score: ${score}%`;
+
+        resultDiv.classList.remove("excellent", "good", "poor");
+
+        if (score >= 60) {
+          resultDiv.classList.add("excellent");
+          document.getElementById("status").textContent = "🎉 Excellent!";
+        } else if (score >= 40) {
+          resultDiv.classList.add("good");
+          document.getElementById("status").textContent =
+            "👍 Good, keep practicing!";
+        } else {
+          resultDiv.classList.add("poor");
+          document.getElementById("status").textContent = "💪 Keep trying!";
+        }
+
+        resultDiv.classList.add("show");
+      }
+
+      // Render sentence list
+      function renderSentences() {
+        const listDiv = document.getElementById("sentenceList");
+        listDiv.innerHTML = sentences
+          .map(
+            (sentence, index) => `
+                <div class="sentence-item" onclick="selectSentence(${index})">
+                    <div class="sentence-japanese">${sentence.jp}</div>
+                    <div class="sentence-romaji">${sentence.romaji}</div>
+                    <div class="sentence-translation">${sentence.en}</div>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      // Select sentence
+      function selectSentence(index) {
+        selectedSentence = sentences[index];
+
+        // Update UI
+        document.querySelectorAll(".sentence-item").forEach((item, i) => {
+          item.classList.toggle("active", i === index);
+        });
+
+        document.getElementById("selectedSentence").textContent =
+          selectedSentence.jp;
+        document.getElementById("recordBtn").disabled = false;
+        document.getElementById("result").classList.remove("show");
+        document.getElementById("status").textContent = "";
+      }
+
+      // Record button click
+      document.getElementById("recordBtn").addEventListener("click", () => {
+        if (recognition && selectedSentence) {
+          document.getElementById("recordBtn").disabled = true;
+          document.getElementById("result").classList.remove("show");
+          recognition.start();
+        }
+      });
+
+      // Initialize
+      renderSentences();
+    </script>
+  </body>
+</html>

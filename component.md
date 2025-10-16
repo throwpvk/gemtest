@@ -1,0 +1,731 @@
+## Nhà Ở và Khu Dân Cư
+- アパート (Chung cư)
+- マンション (Cao ốc chung cư)
+- Nhà gỗ truyền thống
+- Nhà mái ngói
+- Nhà phố hẹp (machiya)
+- Khu nhà tập thể
+- Biệt thự vườn
+- Nhà trọ sinh viên
+- Kí túc xá công nhân
+- Nhà phố cũ
+- Căn hộ studio
+- Nhà 2 tầng
+- Nhà mái dốc
+- Khu nhà xã hội
+- Penthouse
+- Nhà gác mái
+- Nhà có vườn Nhật
+- Nhà phố shophouse
+- Nhà kiểu Showa
+- Nhà hiện đại minimalist
+- Nhà cổ (cổ dân gia)
+- Nhà mái tranh
+- Nhà có vườn rau
+- Khu dân cư đô thị
+- Khu dân cư nông thôn
+- Khu nhà tái định cư
+- Khu nhà ở cao tầng
+- Khu nhà ở thấp tầng
+- Nhà phố liên kế
+- Biệt thự ven sông
+
+## Cửa Hàng và Thương Mại
+- コンビニ (Cửa hàng tiện lợi)
+- Siêu thị
+- Cửa hàng 100 yên
+- 百貨店 (Trung tâm thương mại)
+- Chợ cá
+- Chợ rau sáng
+- Cửa hàng sách cũ
+- 書店 (Hiệu sách)
+- 電気屋 (Cửa hàng điện tử)
+- Tiệm bách hóa gia đình
+- Cửa hàng đồ cổ
+- リサイクルショップ (Cửa hàng đồ cũ)
+- 薬局 (Hiệu thuốc)
+- ドラッグストア (Cửa hàng thuốc tây)
+- 酒屋 (Cửa hàng rượu sake)
+- パン屋 (Tiệm bánh mì)
+- 和菓子屋 (Tiệm bánh truyền thống)
+- 花屋 (Tiệm hoa)
+- 金物屋 (Cửa hàng kim khí)
+- 文房具店 (Cửa hàng văn phòng phẩm)
+- おもちゃ屋 (Cửa hàng đồ chơi)
+- ゲームセンター (Trung tâm game)
+- カラオケ (Karaoke)
+- Cửa hàng mô hình
+- Cửa hàng manga
+- Cửa hàng đĩa nhạc
+- Cửa hàng kimono
+- Cửa hàng yukata
+- Cửa hàng gốm sứ
+- Cửa hàng dao làm bếp
+- Cửa hàng đồ biển
+- Cửa hàng thể thao
+- Cửa hàng câu cá
+- Cửa hàng leo núi
+- 自転車屋 (Cửa hàng xe đạp)
+- オートバイショップ (Cửa hàng moto)
+- 中古車センター (Trung tâm xe hơi cũ)
+- ガソリンスタンド (Trạm xăng)
+- Cửa hàng điện thoại
+- Cửa hàng máy ảnh
+- Cửa hàng anime goods
+- Maid cafe
+- Cửa hàng cosplay
+- ドン・キホーテ (Don Quijote)
+- Cửa hàng thời trang
+- Cửa hàng phụ kiện
+- Cửa hàng đồ gia dụng
+- Cửa hàng hoa quả
+- Cửa hàng thực phẩm
+- Khu chợ ngoài trời
+
+## Ăn Uống và Nhà Hàng
+- 居酒屋 (Izakaya)
+- ラーメン屋 (Quán ramen)
+- 寿司屋 (Quán sushi)
+- 焼き鳥屋 (Quán xiên nướng)
+- うどん屋 (Quán udon)
+- そば屋 (Quán soba)
+- 天ぷら屋 (Quán tempura)
+- お好み焼き屋 (Quán okonomiyaki)
+- たこ焼き屋 (Quán bạch tuộc nướng)
+- 焼肉屋 (Quán thịt nướng)
+- とんかつ屋 (Quán thịt chiên)
+- カレー屋 (Quán cà ri)
+- 定食屋 (Quán cơm suất)
+- 弁当屋 (Quán cơm hộp)
+- おにぎり屋 (Quán cơm nắm)
+- 牛丼屋 (Quán cơm thịt bò)
+- 回転寿司 (Sushi băng chuyền)
+- ファミレス (Nhà hàng gia đình)
+- カフェ (Cafe)
+- 喫茶店 (Quán cafe truyền thống)
+- スタバ (Starbucks)
+- パン屋カフェ (Cafe bánh mì)
+- ケーキ屋 (Tiệm bánh ngọt)
+- 和菓子カフェ (Cafe bánh Nhật)
+- アイスクリーム屋 (Tiệm kem)
+- たい焼き屋 (Tiệm bánh cá)
+- クレープ屋 (Tiệm crepe)
+- ドーナツ屋 (Tiệm donut)
+- 中華料理店 (Nhà hàng Trung Hoa)
+- 韓国料理店 (Nhà hàng Hàn Quốc)
+- イタリアン (Nhà hàng Ý)
+- フレンチ (Nhà hàng Pháp)
+- ファストフード (Fast food)
+- 立ち飲み屋 (Quán đứng uống)
+- 屋台 (Quán vỉa hè)
+- フードコート (Khu ăn uống)
+- Quán trà sữa
+- Quán bia hơi
+- Quán ăn đường phố
+- Nhà hàng hải sản
+- Nhà hàng chay
+- Khu ẩm thực ngoài trời
+
+## Giao Thông và Hạ Tầng
+- 駅 (Ga tàu điện)
+- 新幹線駅 (Ga shinkansen)
+- 地下鉄駅 (Ga tàu điện ngầm)
+- バス停 (Trạm xe buýt)
+- バスターミナル (Bến xe buýt)
+- タクシー乗り場 (Điểm đón taxi)
+- 駐車場 (Bãi đỗ xe)
+- 駐輪場 (Bãi đỗ xe đạp)
+- 高速道路 (Đường cao tốc)
+- 料金所 (Trạm thu phí)
+- インターチェンジ (Nút giao thông)
+- 陸橋 (Cầu vượt)
+- 地下道 (Đường hầm)
+- 歩道橋 (Cầu đi bộ)
+- 横断歩道 (Vạch qua đường)
+- 踏切 (Gác chắn đường ray)
+- トンネル (Đường hầm)
+- 橋 (Cầu)
+- 港 (Cảng)
+- フェリーターミナル (Bến phà)
+- 空港 (Sân bay)
+- ヘリポート (Sân bay trực thăng)
+- 線路 (Đường ray)
+- 駅のホーム (Sân ga)
+- 改札口 (Cửa soát vé)
+- 車両基地 (Kho xe lửa)
+- 車庫 (Nhà ga)
+- 整備工場 (Xưởng bảo trì)
+- 信号所 (Trạm tín hiệu)
+- 鉄橋 (Cầu sắt)
+- 高架線 (Đường ray trên cao)
+- 地下線 (Đường ray ngầm)
+- 国道 (Quốc lộ)
+- 県道 (Tỉnh lộ)
+- 市道 (Đường thành phố)
+- 路地 (Ngõ)
+- 歩道 (Vỉa hè)
+- 自転車道 (Đường xe đạp)
+- 信号機 (Đèn giao thông)
+- ガードレール (Lan can)
+- 街灯 (Đèn đường)
+- 電柱 (Cột điện)
+- マンホール (Nắp cống)
+- 側溝 (Rãnh thoát nước)
+- カーブミラー (Gương cầu)
+- ポスト (Hòm thư)
+- 観光バス駐車場 (Bãi đỗ xe bus du lịch)
+- Đường cao tốc đô thị
+- Cầu treo
+- Đường sắt đô thị
+- Trạm dừng xe tải
+- Bãi đỗ xe ngầm
+- Đường vòng
+
+## Công Sở và Hành Chính
+- 市役所 (Tòa thị chính)
+- 区役所 (Văn phòng quận)
+- 町役場 (Văn phòng thị trấn)
+- 警察署 (Đồn cảnh sát)
+- 交番 (Chốt cảnh sát)
+- 消防署 (Trạm cứu hỏa)
+- 郵便局 (Bưu điện)
+- 銀行 (Ngân hàng)
+- 税務署 (Cục thuế)
+- ハローワーク (Trung tâm việc làm)
+- 図書館 (Thư viện)
+- 公民館 (Trung tâm cộng đồng)
+- Văn phòng công ty
+- オフィスビル (Tòa nhà văn phòng)
+- 本社ビル (Trụ sở chính)
+- 支社 (Chi nhánh)
+- 工場事務所 (Văn phòng nhà máy)
+- Trụ sở chính phủ địa phương
+- Văn phòng đăng ký dân sự
+- Trung tâm hành chính quận
+- Tòa án địa phương
+- Văn phòng an ninh
+- Văn phòng môi trường
+
+## Y Tế
+- 病院 (Bệnh viện)
+- クリニック (Phòng khám)
+- 歯医者 (Nha sĩ)
+- 接骨院 (Phòng chỉnh xương)
+- 整体院 (Phòng vật lý trị liệu)
+- 鍼灸院 (Phòng châm cứu)
+- 眼科 (Khoa mắt)
+- 耳鼻科 (Khoa tai mũi họng)
+- 小児科 (Khoa nhi)
+- 産婦人科 (Khoa sản)
+- 内科 (Khoa nội)
+- 外科 (Khoa ngoại)
+- 精神科 (Khoa tâm thần)
+- 救急病院 (Bệnh viện cấp cứu)
+- Bệnh viện nhi đồng
+- Bệnh viện đa khoa
+- Phòng khám tư nhân
+- Bệnh viện chuyên khoa
+- Trạm y tế cộng đồng
+- Bệnh viện thú y
+
+## Giáo Dục
+- 保育園 (Nhà trẻ)
+- 幼稚園 (Mẫu giáo)
+- 小学校 (Tiểu học)
+- 中学校 (Trung học cơ sở)
+- 高校 (Trung học phổ thông)
+- 大学 (Đại học)
+- 専門学校 (Trường chuyên ngành)
+- 予備校 (Trường luyện thi)
+- 塾 (Lớp học thêm)
+- 英会話教室 (Lớp tiếng Anh)
+- そろばん教室 (Lớp toán bàn tính)
+- 書道教室 (Lớp thư pháp)
+- ピアノ教室 (Lớp piano)
+- 武道場 (Võ đường)
+- スイミングスクール (Trường bơi)
+- Trường đại học quốc lập
+- Trường nghề
+- Trường quốc tế
+- Trường mầm non
+- Trường chuyên
+- Khuôn viên trường học
+
+## Tôn Giáo
+- 神社 (Đền thờ Shinto)
+- 寺 (Chùa Phật giáo)
+- 鳥居 (Cổng torii)
+- 本堂 (Điện chính)
+- 五重塔 (Tháp năm tầng)
+- 鐘楼 (Chuông lầu)
+- 手水舎 (Nhà rửa tay)
+- 賽銭箱 (Hòm công đức)
+- お守り売り場 (Quầy bán bùa may mắn)
+- 絵馬掛け所 (Nơi treo bảng gỗ cầu nguyện)
+- 地蔵 (Tượng Jizo)
+- 稲荷神社 (Đền Inari)
+- 石灯籠 (Đèn đá)
+- 狛犬 (Tượng chó canh)
+- お墓 (Mộ)
+- 霊園 (Nghĩa trang)
+- 納骨堂 (Nhà thờ tro cốt)
+- Đền thờ địa phương
+- Chùa cổ
+- Nghĩa trang đô thị
+- Đền thờ gia tộc
+- Tượng Phật ngoài trời
+- Cổng chùa lớn
+
+## Giải Trí và Văn Hóa
+- 映画館 (Rạp phim)
+- 劇場 (Nhà hát)
+- 美術館 (Bảo tàng mỹ thuật)
+- 博物館 (Bảo tàng)
+- 水族館 (Thủy cung)
+- 動物園 (Sở thú)
+- 植物園 (Vườn bách thảo)
+- 遊園地 (Công viên giải trí)
+- テーマパーク (Công viên chủ đề)
+- ボウリング場 (Sân bowling)
+- ビリヤード場 (Phòng bi-a)
+- ダーツバー (Quán dart)
+- パチンコ (Pachinko)
+- 競馬場 (Trường đua ngựa)
+- 競輪場 (Trường đua xe đạp)
+- 競艇場 (Trường đua thuyền)
+- スポーツジム (Phòng gym)
+- ヨガスタジオ (Studio yoga)
+- ネットカフェ (Net cafe)
+- 漫画喫茶 (Quán manga)
+- プラネタリウム (Rạp thiên văn)
+- 科学館 (Bảo tàng khoa học)
+- 歴史博物館 (Bảo tàng lịch sử)
+- 民俗資料館 (Bảo tàng dân gian)
+- ライブハウス (Nhà thi đấu âm nhạc)
+- クラブ (Club)
+- バー (Bar)
+- スナック (Quán snack)
+- キャバクラ (Cabaret club)
+- Công viên giải trí lớn
+- Bảo tàng nghệ thuật hiện đại
+- Sở thú ngoài trời
+- Rạp phim ngoài trời
+- Nhà hát opera
+- Trung tâm văn hóa
+
+## Công Viên và Không Gian Công Cộng
+- 公園 (Công viên)
+- 児童公園 (Công viên trẻ em)
+- 広場 (Quảng trường)
+- 噴水 (Đài phun nước)
+- ベンチ (Ghế công viên)
+- 東屋 (Chòi nghỉ)
+- トイレ (Nhà vệ sinh công cộng)
+- バスケットコート (Sân bóng rổ)
+- テニスコート (Sân tennis)
+- 野球場 (Sân bóng chày)
+- サッカー場 (Sân bóng đá)
+- 陸上競技場 (Sân điền kinh)
+- プール (Bể bơi)
+- スケートパーク (Công viên trượt ván)
+- ドッグラン (Khu chơi cho chó)
+- Công viên ven sông
+- Quảng trường trung tâm
+- Công viên quốc gia nhỏ
+- Khu vực dã ngoại
+- Vườn hoa công cộng
+- Khu vực tập thể dục ngoài trời
+
+## Nông Thôn và Nông Nghiệp
+- 田んぼ (Ruộng lúa)
+- 畑 (Vườn rau)
+- 果樹園 (Vườn trái cây)
+- ビニールハウス (Nhà kính)
+- 温室 (Nhà ấm)
+- 納屋 (Nhà kho nông cụ)
+- 倉庫 (Kho)
+- 農機具小屋 (Nhà chứa máy móc)
+- 用水路 (Kênh thủy lợi)
+- ため池 (Ao chứa nước)
+- 井戸 (Giếng)
+- 電気柵 (Hàng rào điện)
+- 堆肥場 (Nơi ủ phân)
+- 精米所 (Xưởng xay gạo)
+- 選果場 (Xưởng phân loại trái cây)
+- 集荷場 (Kho thu gom)
+- 直売所 (Cửa hàng bán trực tiếp)
+- 道の駅 (Trạm nghỉ đường cao tốc)
+- 農協 (Hợp tác xã nông nghiệp)
+- 畜舎 (Chuồng gia súc)
+- 牛舎 (Chuồng bò)
+- 豚舎 (Chuồng lợn)
+- 鶏舎 (Chuồng gà)
+- 放牧地 (Đồng cỏ chăn thả)
+- サイロ (Silo)
+- 酪農場 (Trang trại sữa)
+- 養蜂場 (Trang trại ong)
+- 茶畑 (Đồn trà)
+- 製茶工場 (Xưởng chế biến trà)
+- ワイナリー (Nhà máy rượu vang)
+- 酒蔵 (Nhà kho rượu sake)
+- 醤油蔵 (Nhà kho nước tương)
+- 味噌蔵 (Nhà kho tương miso)
+- 干し場 (Nơi phơi)
+- 乾燥場 (Sân phơi)
+- 水車小屋 (Nhà cối nước)
+- 石垣 (Tường đá)
+- 石橋 (Cầu đá)
+- 里山 (Rừng núi thôn quê)
+- 竹林 (Rừng tre)
+- 棚田 (Ruộng bậc thang)
+- Trang trại hữu cơ
+- Vườn cây ăn quả
+- Khu chăn nuôi lớn
+- Trang trại hoa
+- Trang trại gia cầm
+- Khu vực tưới tiêu
+
+## Miền Núi
+- 登山道 (Đường leo núi)
+- 山小屋 (Nhà nghỉ trên núi)
+- 避難小屋 (Nhà tránh nạn)
+- 展望台 (Đài quan sát)
+- 山頂 (Đỉnh núi)
+- 峠 (Đèo)
+- 尾根 (Sống núi)
+- 谷 (Thung lũng)
+- 渓谷 (Hẻm núi)
+- 沢 (Suối nhỏ)
+- 滝 (Thác)
+- 渓流 (Suối)
+- 吊り橋 (Cầu treo)
+- ロープウェイ (Cáp treo)
+- リフト (Ghế treo)
+- ゴンドラ (Gondola)
+- スキー場 (Trường trượt tuyết)
+- スキーロッジ (Lodge trượt tuyết)
+- 温泉 (Suối nước nóng)
+- 露天風呂 (Bồn tắm ngoài trời)
+- 旅館 (Nhà nghỉ truyền thống)
+- 民宿 (Nhà trọ gia đình)
+- ペンション (Pension)
+- キャンプ場 (Khu cắm trại)
+- バンガロー (Bungalow)
+- 登山口 (Điểm bắt đầu leo núi)
+- 森林 (Rừng)
+- 針葉樹林 (Rừng lá kim)
+- 広葉樹林 (Rừng lá rộng)
+- 林道 (Đường rừng)
+- 伐採場 (Nơi chặt cây)
+- 製材所 (Xưởng cưa gỗ)
+- 炭焼き小屋 (Nhà làm than)
+- 鉱山跡 (Mỏ bỏ hoang)
+- ダム (Đập)
+- 発電所 (Nhà máy điện)
+- 送電線 (Đường dây điện)
+- 鉄塔 (Tháp truyền tải)
+- 気象観測所 (Đài khí tượng)
+- レーダーサイト (Trạm radar)
+- Rừng núi cao
+- Thung lũng sâu
+- Đèo núi
+- Khu cắm trại núi
+- Đài quan sát thiên văn
+- Khu suối nước nóng
+
+## Ven Biển và Biển
+- 海岸 (Bờ biển)
+- 砂浜 (Bãi cát)
+- 岩場 (Bãi đá)
+- 磯 (Rạn đá)
+- 入江 (Vịnh nhỏ)
+- 湾 (Vịnh)
+- 岬 (Mũi đất)
+- 半島 (Bán đảo)
+- 島 (Đảo)
+- 無人島 (Đảo hoang)
+- 離島 (Đảo xa)
+- 埋め立て地 (Đất lấp biển)
+- 防波堤 (Đê chắn sóng)
+- 堤防 (Đê)
+- 波止場 (Bến tàu)
+- 桟橋 (Cầu tàu)
+- 漁港 (Cảng cá)
+- コンテナ港 (Cảng container)
+- 造船所 (Xưởng đóng tàu)
+- ドック (Đốc tàu)
+- 船着き場 (Bến đậu thuyền)
+- マリーナ (Marina)
+- ヨットハーバー (Cảng du thuyền)
+- 灯台 (Hải đăng)
+- 海の家 (Nhà bãi biển)
+- ビーチハウス (Beach house)
+- サーフショップ (Cửa hàng lướt sóng)
+- ダイビングショップ (Cửa hàng lặn)
+- レンタルショップ (Cửa hàng cho thuê)
+- 釣具店 (Cửa hàng câu cá)
+- 海産物店 (Cửa hàng hải sản)
+- 魚市場 (Chợ cá)
+- 水揚げ場 (Nơi dỡ hàng cá)
+- 製氷工場 (Nhà máy làm đá)
+- 冷凍倉庫 (Kho lạnh)
+- 水産加工場 (Xưởng chế biến hải sản)
+- かまぼこ工場 (Xưởng làm chả cá)
+- 干物工場 (Xưởng làm cá khô)
+- 海苔工場 (Xưởng làm rong biển)
+- 塩田 (Ruộng muối)
+- 養殖場 (Trang trại nuôi trồng thủy sản)
+- 真珠養殖場 (Trang trại nuôi ngọc trai)
+- 牡蠣養殖場 (Trang trại nuôi hàu)
+- 定置網 (Lưới cố định)
+- テトラポッド (Khối bê tông chắn sóng)
+- 海水浴場 (Bãi tắm biển)
+- 海岸公園 (Công viên bờ biển)
+- 遊歩道 (Lối đi bộ)
+- 展望デッキ (Sàn quan sát)
+- ビーチバレー場 (Sân bóng chuyền bãi biển)
+- Bãi biển du lịch
+- Vịnh nhỏ
+- Cảng thương mại
+- Đảo nhỏ ven biển
+- Rạn san hô
+- Bãi đá ngầm
+
+## Đảo
+- 離島ターミナル (Bến phà đảo xa)
+- 港 (Cảng đảo)
+- 診療所 (Phòng khám đảo)
+- 島の学校 (Trường học trên đảo)
+- 売店 (Cửa hàng nhỏ)
+- 民宿 (Nhà trọ)
+- ゲストハウス (Nhà khách)
+- 集落 (Làng)
+- 漁師の家 (Nhà ngư dân)
+- 集会所 (Nhà văn hóa)
+- 郵便局 (Bưu điện đảo)
+- 発電施設 (Nhà máy điện đảo)
+- 貯水タンク (Bể chứa nước)
+- ヘリポート (Sân bay trực thăng)
+- Làng đảo nhỏ
+- Cảng đảo xa
+- Khu dân cư đảo
+- Trường học đảo
+- Nhà nghỉ đảo
+- Bãi biển đảo
+
+## Khu Công Nghiệp
+- 工場 (Nhà máy)
+- 製造工場 (Nhà máy sản xuất)
+- 組立工場 (Nhà máy lắp ráp)
+- 自動車工場 (Nhà máy ô tô)
+- 電子工場 (Nhà máy điện tử)
+- 精密機械工場 (Nhà máy cơ khí chính xác)
+- 食品工場 (Nhà máy thực phẩm)
+- 製薬工場 (Nhà máy dược phẩm)
+- 化学工場 (Nhà máy hóa chất)
+- 製鉄所 (Nhà máy thép)
+- 石油化学コンビナート (Khu liên hợp hóa dầu)
+- 発電所 (Nhà máy điện)
+- 火力発電所 (Nhà máy nhiệt điện)
+- 原子力発電所 (Nhà máy điện hạt nhân)
+- 太陽光発電所 (Nhà máy điện mặt trời)
+- 風力発電所 (Nhà máy điện gió)
+- 水力発電所 (Nhà máy thủy điện)
+- 変電所 (Trạm biến áp)
+- 浄水場 (Nhà máy nước sạch)
+- 下水処理場 (Nhà máy xử lý nước thải)
+- ゴミ処理場 (Nhà máy xử lý rác)
+- 焼却場 (Lò đốt rác)
+- リサイクルセンター (Trung tâm tái chế)
+- 倉庫 (Kho)
+- 物流センター (Trung tâm logistics)
+- 配送センター (Trung tâm giao hàng)
+- トラックターミナル (Bến xe tải)
+- コンテナヤード (Bãi container)
+- 駐車場 (Bãi đỗ xe công nhân)
+- 守衛所 (Chốt bảo vệ)
+- 検問所 (Trạm kiểm soát)
+- 研究所 (Viện nghiên cứu)
+- 試作工場 (Xưởng chế tạo mẫu)
+- 事務棟 (Tòa nhà văn phòng)
+- 食堂 (Nhà ăn công nhân)
+- Khu công nghiệp nặng
+- Khu công nghệ cao
+- Nhà máy tái chế
+- Khu logistics lớn
+- Nhà máy hóa chất
+- Khu công nghiệp nhẹ
+
+## Khu Thương Mại và Giải Trí
+- ショッピングモール (Trung tâm mua sắm)
+- アウトレットモール (Outlet mall)
+- 商店街 (Phố thương mại)
+- アーケード (Khu mua sắm có mái che)
+- 地下街 (Khu mua sắm ngầm)
+- ファッションビル (Tòa nhà thời trang)
+- 家電量販店 (Cửa hàng điện tử lớn)
+- ホームセンター (Trung tâm đồ gia dụng)
+- スーパー銭湯 (Nhà tắm công cộng lớn)
+- 健康ランド (Trung tâm sức khỏe)
+- サウナ (Sauna)
+- カプセルホテル (Khách sạn kén)
+- ビジネスホテル (Khách sạn business)
+- シティホテル (Khách sạn thành phố)
+- リゾートホテル (Khách sạn resort)
+- 高級ホテル (Khách sạn cao cấp)
+- ラブホテル (Love hotel)
+- ゲームセンター (Trung tâm game)
+- アミューズメント施設 (Cơ sở giải trí)
+- VRアーケード (Khu game VR)
+- Khu mua sắm cao cấp
+- Phố đi bộ thương mại
+- Khu giải trí đêm
+- Khách sạn ven biển
+- Trung tâm thương mại ngầm
+- Khu outlet lớn
+
+## Du Lịch và Giải Trí
+- 観光案内所 (Trung tâm thông tin du lịch)
+- ビジターセンター (Trung tâm khách tham quan)
+- 展望台 (Đài quan sát)
+- 観光タワー (Tháp du lịch)
+- 観光船乗り場 (Bến tàu du lịch)
+- お土産屋 (Cửa hàng quà lưu niệm)
+- 特産品店 (Cửa hàng đặc sản)
+- 観光ホテル (Khách sạn du lịch)
+- 温泉旅館 (Nhà nghỉ suối nước nóng)
+- ユースホステル (Youth hostel)
+- 農家民宿 (Nhà trọ nông gia)
+- 古民家宿 (Nhà trọ nhà cổ)
+- 寺宿坊 (Nhà trọ chùa)
+- キャンプ場管理棟 (Nhà quản lý khu cắm trại)
+- オートキャンプ場 (Khu cắm trại ô tô)
+- グランピング施設 (Cơ sở glamping)
+- 名所 (Danh lam)
+- 旧跡 (Cổ tích)
+- 城跡 (Di tích lâu đài)
+- 城 (Lâu đài)
+- 天守閣 (Tháp chính lâu đài)
+- 庭園 (Vườn Nhật)
+- 日本庭園 (Vườn truyền thống Nhật)
+- 花見スポット (Điểm ngắm hoa)
+- 紅葉スポット (Điểm ngắm lá đỏ)
+- 夜景スポット (Điểm ngắm cảnh đêm)
+- 星空観測所 (Đài quan sát bầu trời đêm)
+- Khu du lịch sinh thái
+- Di tích lịch sử
+- Tháp du lịch
+- Khu nghỉ dưỡng
+- Điểm ngắm cảnh núi
+- Khu vực di sản văn hóa
+
+## Lễ Hội và Sự Kiện
+- 祭り会場 (Địa điểm lễ hội)
+- 花火大会会場 (Địa điểm bắn pháo hoa)
+- 舞台 (Sân khấu)
+- ライブ会場 (Địa điểm biểu diễn trực tiếp)
+- 野外ステージ (Sân khấu ngoài trời)
+- テント (Lều)
+- 仮設トイレ (Nhà vệ sinh tạm)
+- 本部テント (Lều trung tâm chỉ huy)
+- 駐車場案内所 (Điểm hướng dẫn bãi đỗ xe)
+- 臨時駐車場 (Bãi đỗ xe tạm)
+- シャトルバス乗り場 (Điểm đón xe đưa đón)
+- Sân khấu lễ hội
+- Khu vực lễ hội mùa hè
+- Địa điểm biểu diễn
+- Khu vực pháo hoa
+- Lễ hội ngoài trời
+- Khu vực hội chợ
+
+## Tự Nhiên và Môi Trường
+- 森 (Rừng)
+- 林 (Lùm cây)
+- 雑木林 (Rừng cây lá rộng)
+- 杉林 (Rừng sam)
+- 檜林 (Rừng bách)
+- 竹やぶ (Bụi tre)
+- 草原 (Đồng cỏ)
+- 草地 (Bãi cỏ)
+- 野原 (Cánh đồng hoang)
+- 湿地 (Đất ngập nước)
+- 湿原 (Vùng đầm lầy)
+- 沼 (Đầm)
+- 池 (Ao)
+- 湖 (Hồ)
+- 河川 (Sông)
+- 川 (Sông nhỏ)
+- 小川 (Suối)
+- 水門 (Cống)
+- 河川敷 (Bãi bồi sông)
+- 中洲 (Bãi bồi giữa sông)
+- 河口 (Cửa sông)
+- 三角州 (Châu thổ)
+- 干潟 (Bãi triều)
+- 砂丘 (Đụn cát)
+- 崖 (Vách đá)
+- 洞窟 (Hang động)
+- 鍾乳洞 (Hang thạch nhũ)
+- 温泉地 (Khu suối nước nóng)
+- 間欠泉 (Mạch nước phun)
+- 地熱地帯 (Khu vực địa nhiệt)
+- 火山 (Núi lửa)
+- 火口 (Miệng núi lửa)
+- 噴気孔 (Lỗ phun khói)
+- 溶岩台地 (Cao nguyên dung nham)
+- 断層 (Đứt gãy)
+- 奇岩 (Đá kỳ lạ)
+- 巨石 (Tảng đá lớn)
+- 岩礁 (Rạn san hô)
+- サンゴ礁 (Rạn san hô)
+- 潮だまり (Vũng nước triều)
+- Rừng nhiệt đới
+- Hồ nước ngọt
+- Sông lớn
+- Đầm lầy
+- Núi lửa
+- Hang động đá
+
+## Động Vật và Thực Vật (Cảnh Quan)
+- 桜の木 (Cây anh đào)
+- 梅の木 (Cây mơ)
+- 松の木 (Cây thông)
+- 杉の木 (Cây sam)
+- 竹 (Tre)
+- 紅葉 (Cây lá đỏ)
+- 銀杏 (Cây bạch quả)
+- 柳 (Cây liễu)
+- 藤棚 (Giàn hoa tử đằng)
+- 紫陽花 (Hoa cẩm tú cầu)
+- 菜の花畑 (Cánh đồng hoa cải)
+- ひまわり畑 (Cánh đồng hoa hướng dương)
+- コスモス畑 (Cánh đồng hoa cosmos)
+- ラベンダー畑 (Cánh đồng hoa lavender)
+- チューリップ畑 (Cánh đồng hoa tulip)
+- バラ園 (Vườn hoa hồng)
+- 菊花園 (Vườn hoa cúc)
+- 蓮池 (Ao sen)
+- 睡蓮池 (Ao súng)
+- 鹿 (Hươu)
+- 猪 (Lợn rừng)
+- 猿 (Khỉ)
+- 狐 (Cáo)
+- 狸 (Chó raccoon)
+- 兎 (Thỏ)
+- リス (Sóc)
+- 鳥 (Chim)
+- カラス (Quạ)
+- スズメ (Chim sẻ)
+- 鳩 (Chim bồ câu)
+- 鷺 (Cò)
+- 鶴 (Hạc)
+- 白鳥 (Thiên nga)
+- カモメ (Mòng biển)
+- トンビ (Diều hâu)
+- フクロウ (Cú)
+- Vườn hoa mùa xuân
+- Cánh đồng hoa
+- Rừng cây lá kim
+- Đồng cỏ động vật
+- Ao cá
+- Khu vực chim di cư

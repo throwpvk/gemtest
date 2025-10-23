@@ -1,289 +1,1141 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>City Side-Scrolling</title>
+    <title>Japanese City Game - Stress Test with Real Images</title>
+
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.production.min.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
+    ></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
     <style>
-      html,
-      body {
+      * {
         margin: 0;
         padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
         overflow: hidden;
-        height: 100%;
-        width: 100%;
-        background: #87ceeb;
       }
 
-      canvas {
-        position: fixed;
-        inset: 0;
-        z-index: 0;
+      .game-container {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
       }
 
-      #gridContainer {
+      /* Layer 1: Sky background (fixed) */
+      .layer-sky {
         position: absolute;
-        top: 0;
-        left: 0;
-        display: grid;
-        grid-template-rows: 400px;
-        grid-template-columns: repeat(160, 200px);
-        transform: translateX(0);
+        inset: 0;
+        background: linear-gradient(to bottom, #87ceeb 0%, #e0f6ff 100%);
         z-index: 1;
+      }
+
+      /* Layer 2: Mountains/clouds background (fixed, no scroll) */
+      .layer-bg-fixed {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        background-image: url("./city/layer2.png");
+        background-size: cover;
+        background-position: center bottom;
+        background-repeat: no-repeat;
+        opacity: 0.3;
+        pointer-events: none;
+      }
+
+      /* Layer 3: Scrolling sprite sheet (buildings) */
+      .layer-sprite-container {
+        position: absolute;
+        bottom: 200px;
+        left: 0;
+        height: 500px;
+        width: 48400px;
+        z-index: 3;
+        will-change: transform;
+        contain: layout style paint;
+      }
+
+      .layer-sprite-sheet {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 500px;
+        width: 48400px;
+        background-image: url("./city/layer3.svg");
+        background-size: 48400px 500px;
+        background-repeat: repeat-x;
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
         will-change: transform;
       }
 
-      .cell {
-        width: 200px;
-        height: 400px;
-        background-image: url("./city/city1.svg");
-        background-size: 32000px 400px;
-        background-repeat: no-repeat;
-        filter: drop-shadow(3px 0 0 white) drop-shadow(-3px 0 0 white)
-          drop-shadow(0 3px 0 white) drop-shadow(0 -3px 0 white);
+      @media (max-width: 896px) {
+        .layer-sprite-container {
+          bottom: 200px;
+          height: 250px;
+          width: 24200px;
+        }
+
+        .layer-sprite-sheet {
+          height: 250px;
+          width: 24200px;
+          background-image: url("./city/layer3-mobile.svg");
+          background-size: 24200px 250px;
+        }
+
+        .interact-button,
+        .current-cell,
+        .collision-indicator {
+          display: none !important;
+        }
       }
 
-      #controls {
-        position: fixed;
-        bottom: 10px;
+      @media (max-width: 896px) and (orientation: landscape) {
+        .layer-sprite-container {
+          bottom: 50px;
+          height: 250px;
+          width: 24200px;
+        }
+
+        .layer-sprite-sheet {
+          height: 250px;
+          width: 24200px;
+          background-image: url("./city/layer3-mobile.svg");
+          background-size: 24200px 250px;
+        }
+
+        .interact-button,
+        .current-cell,
+        .collision-indicator {
+          display: none !important;
+        }
+      }
+
+      /* Canvas for game objects (NPCs, items, etc.) */
+      .game-canvas {
+        position: absolute;
+        inset: 0;
+        z-index: 4;
+      }
+
+      /* UI Overlays */
+      .ui-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 10;
+        pointer-events: none;
+      }
+
+      .ui-overlay > * {
+        pointer-events: auto;
+      }
+
+      .ui-panel {
+        position: absolute;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        backdrop-filter: blur(10px);
+      }
+
+      .controls {
+        top: 16px;
+        left: 16px;
+      }
+
+      .controls-title {
+        font-weight: bold;
+        margin-bottom: 8px;
+        color: #fbbf24;
+      }
+
+      .stats {
+        top: 16px;
+        right: 16px;
+        min-width: 200px;
+      }
+
+      .stat-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 4px;
+      }
+
+      .stat-label {
+        color: #9ca3af;
+      }
+
+      .stat-value {
+        color: #10b981;
+        font-weight: bold;
+      }
+
+      .current-cell {
+        position: absolute;
+        bottom: 100px;
+        left: 30%;
+        transform: translateX(-50%);
+        background: rgba(59, 130, 246, 0.95);
+        color: white;
+        padding: 16px 32px;
+        border-radius: 12px;
+        font-size: 24px;
+        font-weight: bold;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(10px);
+        display: none;
+      }
+
+      .collision-indicator {
+        position: absolute;
+        top: 80px;
         left: 50%;
         transform: translateX(-50%);
+        background: linear-gradient(to right, #fbbf24, #f97316);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 9999px;
+        font-weight: bold;
         display: flex;
-        gap: 10px;
-        z-index: 2;
+        align-items: center;
+        gap: 8px;
+        animation: bounce 1s infinite;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
       }
 
-      button {
-        padding: 8px 14px;
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateX(-50%) translateY(0);
+        }
+        50% {
+          transform: translateX(-50%) translateY(-10px);
+        }
+      }
+
+      .interact-button {
+        position: absolute;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #3b82f6;
+        color: white;
+        padding: 16px 32px;
+        border-radius: 12px;
+        font-weight: bold;
+        font-size: 18px;
         border: none;
-        border-radius: 8px;
-        background: #333;
-        color: #fff;
         cursor: pointer;
-        font-size: 16px;
+        transition: all 0.3s;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
       }
 
-      /* Mobile landscape */
-      @media (max-width: 1024px) and (orientation: landscape) {
-        #gridContainer {
-          grid-template-rows: 200px;
-          grid-template-columns: repeat(160, 100px);
-        }
-
-        .cell {
-          width: 100px;
-          height: 200px;
-          background-size: 16000px 200px;
-        }
-
-        #controls {
-          bottom: 5px;
-          gap: 5px;
-        }
-
-        button {
-          padding: 6px 10px;
-          font-size: 14px;
-        }
+      .interact-button:hover {
+        background: #2563eb;
+        transform: translateX(-50%) scale(1.05);
       }
 
-      /* Mobile portrait */
-      @media (max-width: 768px) and (orientation: portrait) {
-        #orientationOverlay {
-          display: flex;
-        }
-      }
-
-      @media (max-width: 1024px) and (orientation: portrait) {
-        #orientationOverlay {
-          display: flex;
-        }
-      }
-
-      #orientationOverlay {
-        display: none;
-        position: fixed;
+      .dialog-overlay {
+        position: absolute;
         inset: 0;
         background: rgba(0, 0, 0, 0.9);
-        flex-direction: column;
+        display: flex;
         align-items: center;
         justify-content: center;
-        z-index: 1000;
-        text-align: center;
+        z-index: 50;
+        backdrop-filter: blur(5px);
       }
 
-      #orientationOverlay h2 {
-        color: #fff;
-        margin: 0 0 20px 0;
+      .dialog-box {
+        background: white;
+        border-radius: 16px;
+        padding: 32px;
+        max-width: 672px;
+        width: 90%;
+        margin: 16px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+      }
+
+      .dialog-title {
+        font-size: 30px;
+        font-weight: bold;
+        margin-bottom: 16px;
+        color: #1f2937;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .dialog-icon {
+        font-size: 48px;
+      }
+
+      .dialog-content {
+        background: linear-gradient(to right, #eff6ff, #faf5ff);
+        padding: 24px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        border: 2px solid #bfdbfe;
+      }
+
+      .dialog-jp {
         font-size: 24px;
+        margin-bottom: 12px;
+        color: #1f2937;
+        font-weight: bold;
       }
 
-      #orientationOverlay p {
-        color: #ccc;
-        margin: 0;
+      .dialog-en {
+        font-size: 18px;
+        color: #4b5563;
+      }
+
+      .dialog-options {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+
+      .option-button {
+        width: 100%;
+        background: #22c55e;
+        color: white;
+        padding: 16px 24px;
+        border-radius: 12px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-align: left;
+        font-weight: bold;
         font-size: 16px;
+      }
+
+      .option-button:hover {
+        background: #16a34a;
+      }
+
+      .close-button {
+        width: 100%;
+        background: #d1d5db;
+        color: #1f2937;
+        padding: 12px 24px;
+        border-radius: 12px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: bold;
+        font-size: 16px;
+      }
+
+      .close-button:hover {
+        background: #9ca3af;
+      }
+
+      /* Cell number overlay for debugging */
+      .cell-numbers {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 500px;
+        z-index: 5;
+        pointer-events: none;
+        will-change: transform;
+      }
+
+      .cell-number {
+        position: absolute;
+        bottom: 10px;
+        width: 200px;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 16px;
+        font-weight: bold;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.3);
+        padding: 4px;
+        border-radius: 4px;
+      }
+
+      .cell-number.active {
+        color: #fbbf24;
+        background: rgba(251, 191, 36, 0.3);
+        font-size: 20px;
+      }
+
+      /****************************** Mobile Controls *********************/
+      .mobile-controls {
+        position: fixed;
+        bottom: 40px;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 25px;
+        pointer-events: none;
+      }
+
+      .control-btn {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: rgba(128, 128, 128, 0.5); /* Xám nhẹ opacity 0.5 */
+        color: white;
+        font-size: 32px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        pointer-events: auto;
+        transition: all 0.15s ease;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        border: none; /* Không có border */
+        box-shadow: none; /* Không có shadow */
+      }
+
+      .control-btn:active {
+        background: rgba(128, 128, 128, 0.7); /* Đậm hơn một chút khi nhấn */
+        transform: scale(0.95);
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 480px) {
+        .mobile-controls {
+          bottom: 25px;
+          padding: 0 20px;
+        }
+
+        .control-btn {
+          width: 60px;
+          height: 60px;
+          font-size: 28px;
+        }
+      }
+
+      @media (min-width: 1200px) {
+        .mobile-controls {
+          bottom: 60px;
+          padding: 0 40px;
+        }
+
+        .control-btn {
+          width: 75px;
+          height: 75px;
+          font-size: 34px;
+        }
+      }
+
+      /* Landscape mode */
+      @media (max-height: 500px) and (orientation: landscape) {
+        .mobile-controls {
+          bottom: 15px;
+          padding: 0 15px;
+        }
+
+        .control-btn {
+          width: 50px;
+          height: 50px;
+          font-size: 22px;
+        }
+      }
+
+      /* Đảm bảo không bị che bởi các element khác */
+      .mobile-controls * {
+        pointer-events: auto !important;
       }
     </style>
   </head>
   <body>
-    <canvas id="bgCanvas"></canvas>
-    <div id="gridContainer"></div>
-    <div id="controls">
-      <button id="left">←</button>
-      <button id="right">→</button>
-    </div>
+    <div id="root"></div>
 
-    <div id="orientationOverlay">
-      <h2>⤴️ Xoay màn hình</h2>
-      <p>Vui lòng xoay thiết bị để chơi</p>
-    </div>
+    <script type="text/babel">
+      const { useState, useEffect, useRef, useMemo } = React;
 
-    <script>
-      // === Easing function ===
-      function easeOutQuad(t) {
-        return 1 - (1 - t) * (1 - t);
-      }
+      // ============================================
+      // GAME ENGINE - Optimized for Real Images
+      // ============================================
+      class OptimizedGameEngine {
+        constructor() {
+          this.worldWidth = 48400; // 242 cells * 200px
+          this.cellWidth = 200;
+          this.cellHeight = 500;
+          this.totalCells = Math.floor(this.worldWidth / this.cellWidth);
 
-      // === Orientation check ===
-      function checkOrientation() {
-        const overlay = document.getElementById("orientationOverlay");
-        const isMobile = /iPhone|iPad|Android|Mobile/i.test(
-          navigator.userAgent
-        );
-        const isPortrait = window.innerHeight > window.innerWidth;
+          this.camera = { x: 0, targetX: 0, smoothing: 0.15 };
 
-        if (isMobile && isPortrait) {
-          overlay.style.display = "flex";
-        } else {
-          overlay.style.display = "none";
+          this.player = {
+            x: 400,
+            y: 320,
+            width: 60,
+            height: 100,
+            vx: 0,
+            speed: 6,
+            score: 0,
+            currentCell: 0,
+          };
+
+          this.buildings = [];
+          this.items = [];
+          this.npcs = [];
+
+          this.lastTime = 0;
+          this.fps = 0;
+          this.frameCount = 0;
+          this.fpsUpdateTime = 0;
+          this.running = false;
+
+          this.onCellChange = null;
+          this.onCollision = null;
+
+          this.initGameObjects();
         }
-      }
 
-      window.addEventListener("orientationchange", checkOrientation);
-      window.addEventListener("resize", checkOrientation);
-      checkOrientation();
+        initGameObjects() {
+          // Create buildings at specific cells
+          const buildingCells = [
+            5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100, 120,
+            140, 160, 180, 200, 220,
+          ];
 
-      // === Grid setup ===
-      const grid = document.getElementById("gridContainer");
-      const leftBtn = document.getElementById("left");
-      const rightBtn = document.getElementById("right");
+          buildingCells.forEach((cellIndex, i) => {
+            const buildingTypes = [
+              {
+                type: "shop",
+                width: 30,
+                height: 30,
+                color: "#FF6B6B",
+                icon: "🏪",
+                name: "コンビニ",
+                nameEn: "Store",
+              },
+              {
+                type: "restaurant",
+                width: 30,
+                height: 30,
+                color: "#4ECDC4",
+                icon: "🍜",
+                name: "レストラン",
+                nameEn: "Restaurant",
+              },
+              {
+                type: "house",
+                width: 30,
+                height: 30,
+                color: "#95E1D3",
+                icon: "🏠",
+                name: "家",
+                nameEn: "House",
+              },
+            ];
 
-      const cols = 160;
-      const cellWidth = 200;
+            const template = buildingTypes[i % buildingTypes.length];
 
-      // Create grid cells
-      for (let i = 0; i < cols; i++) {
-        const cell = document.createElement("div");
-        cell.className = "cell";
-        cell.style.backgroundPositionX = `-${i * cellWidth}px`;
-        grid.appendChild(cell);
-      }
+            this.buildings.push({
+              id: `building-${i}`,
+              cellIndex: cellIndex,
+              ...template,
+              x: cellIndex * this.cellWidth + 10,
+              y: 400 - template.height,
+              interactable: true,
+            });
+          });
 
-      // === Canvas background with clouds ===
-      const canvas = document.getElementById("bgCanvas");
-      const ctx = canvas.getContext("2d");
-      let clouds = [];
+          // Create items
+          for (let i = 0; i < 50; i++) {
+            const itemTypes = [
+              {
+                type: "coin",
+                width: 30,
+                height: 30,
+                color: "#FFD700",
+                icon: "💰",
+                points: 10,
+              },
+              {
+                type: "book",
+                width: 35,
+                height: 35,
+                color: "#8B4513",
+                icon: "📚",
+                points: 50,
+              },
+            ];
 
-      function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+            const template = itemTypes[i % itemTypes.length];
 
-        if (clouds.length === 0) {
-          for (let i = 0; i < 8; i++) {
-            clouds.push({
-              x: Math.random() * canvas.width,
-              y: (Math.random() * canvas.height) / 2,
-              speed: 0.2 + Math.random() * 0.4,
-              size: 80 + Math.random() * 100,
+            this.items.push({
+              id: `item-${i}`,
+              ...template,
+              x: Math.random() * this.worldWidth,
+              y: 400,
+              collected: false,
+              bobOffset: Math.random() * Math.PI * 2,
+            });
+          }
+
+          // Create NPCs
+          for (let i = 0; i < 10; i++) {
+            this.npcs.push({
+              id: `npc-${i}`,
+              x: Math.random() * this.worldWidth,
+              y: 330,
+              width: 50,
+              height: 90,
+              vx: (Math.random() - 0.5) * 3,
+              color: `hsl(${Math.random() * 360}, 70%, 60%)`,
+              hasDialog: true,
+              dialog: {
+                jp: "こんにちは！",
+                en: "Hello!",
+              },
             });
           }
         }
-      }
 
-      window.addEventListener("resize", resizeCanvas);
-      resizeCanvas();
+        update(deltaTime) {
+          // Update player
+          if (this.player.vx !== 0) {
+            this.player.x += this.player.vx;
+            this.player.x = Math.max(
+              0,
+              Math.min(this.worldWidth - this.player.width, this.player.x)
+            );
 
-      function drawClouds(dt) {
-        ctx.fillStyle = "#87CEEB";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "rgba(255,255,255,0.8)";
+            // Calculate current cell
+            const newCell = Math.floor(
+              (this.player.x + this.player.width / 2) / this.cellWidth
+            );
+            if (newCell !== this.player.currentCell) {
+              this.player.currentCell = newCell;
+              if (this.onCellChange) {
+                this.onCellChange(newCell);
+              }
+            }
 
-        for (let c of clouds) {
-          ctx.beginPath();
-          ctx.ellipse(c.x, c.y, c.size, c.size / 2, 0, 0, Math.PI * 2);
-          ctx.fill();
-          c.x += c.speed * dt * 0.05;
-          if (c.x - c.size > canvas.width) c.x = -c.size;
+            this.camera.targetX =
+              this.player.x - window.innerWidth / 2 + this.player.width / 2;
+            this.camera.targetX = Math.max(
+              0,
+              Math.min(this.worldWidth - window.innerWidth, this.camera.targetX)
+            );
+          }
+
+          // Smooth camera
+          this.camera.x +=
+            (this.camera.targetX - this.camera.x) * this.camera.smoothing;
+
+          // Update NPCs (only near camera)
+          const viewport = {
+            left: this.camera.x - 200,
+            right: this.camera.x + window.innerWidth + 200,
+          };
+
+          this.npcs.forEach((npc) => {
+            if (npc.x > viewport.left && npc.x < viewport.right) {
+              npc.x += npc.vx;
+              if (npc.x < 0 || npc.x > this.worldWidth - npc.width) {
+                npc.vx *= -1;
+              }
+            }
+          });
+
+          // Animate items
+          this.items.forEach((item) => {
+            if (!item.collected) {
+              item.bobOffset += 0.05;
+            }
+          });
+
+          // Check collisions
+          this.checkCollisions();
+        }
+
+        checkCollisions() {
+          const viewport = {
+            left: this.player.x - 100,
+            right: this.player.x + this.player.width + 100,
+          };
+
+          // Check buildings
+          this.buildings.forEach((building) => {
+            if (building.x > viewport.left && building.x < viewport.right) {
+              if (this.checkAABB(this.player, building)) {
+                if (this.onCollision) {
+                  this.onCollision({ type: "building", target: building });
+                }
+              }
+            }
+          });
+
+          // Check items
+          this.items.forEach((item) => {
+            if (
+              !item.collected &&
+              item.x > viewport.left &&
+              item.x < viewport.right
+            ) {
+              if (this.checkAABB(this.player, item)) {
+                item.collected = true;
+                this.player.score += item.points;
+                if (this.onCollision) {
+                  this.onCollision({ type: "item", target: item });
+                }
+              }
+            }
+          });
+
+          // Check NPCs
+          this.npcs.forEach((npc) => {
+            if (npc.x > viewport.left && npc.x < viewport.right) {
+              if (this.checkAABB(this.player, npc)) {
+                if (this.onCollision) {
+                  this.onCollision({ type: "npc", target: npc });
+                }
+              }
+            }
+          });
+        }
+
+        checkAABB(a, b) {
+          return (
+            a.x < b.x + b.width &&
+            a.x + a.width > b.x &&
+            a.y < b.y + b.height &&
+            a.y + a.height > b.y
+          );
+        }
+
+        renderCanvas(ctx, width, height) {
+          // Clear canvas
+          ctx.clearRect(0, 0, width, height);
+
+          const viewport = {
+            left: this.camera.x - 100,
+            right: this.camera.x + width + 100,
+          };
+
+          // Render items
+          this.items.forEach((item) => {
+            if (item.collected) return;
+            const screenX = item.x - this.camera.x;
+            if (screenX > -item.width && screenX < width) {
+              const bobY = Math.sin(item.bobOffset) * 10;
+              ctx.fillStyle = item.color;
+              ctx.fillRect(screenX, item.y + bobY, item.width, item.height);
+              ctx.font = "24px Arial";
+              ctx.fillText(item.icon, screenX + 5, item.y + bobY + 25);
+            }
+          });
+
+          // Render buildings
+          this.buildings.forEach((building) => {
+            const screenX = building.x - this.camera.x;
+            if (screenX > -building.width && screenX < width) {
+              ctx.fillStyle = building.color;
+              ctx.fillRect(
+                screenX,
+                building.y,
+                building.width,
+                building.height
+              );
+              ctx.font = "bold 20px Arial";
+              ctx.fillText(
+                building.icon,
+                screenX + building.width / 2 - 20,
+                building.y + 60
+              );
+            }
+          });
+
+          // Render NPCs
+          this.npcs.forEach((npc) => {
+            const screenX = npc.x - this.camera.x;
+            if (screenX > -npc.width && screenX < width) {
+              ctx.fillStyle = npc.color;
+              ctx.fillRect(screenX, npc.y, npc.width, npc.height);
+              ctx.fillStyle = "#000";
+              ctx.fillRect(screenX + 12, npc.y + 20, 10, 10);
+              ctx.fillRect(screenX + 28, npc.y + 20, 10, 10);
+            }
+          });
+
+          // Render player
+          const playerScreenX = this.player.x - this.camera.x;
+          ctx.fillStyle = "#FF6B6B";
+          ctx.fillRect(
+            playerScreenX,
+            this.player.y,
+            this.player.width,
+            this.player.height
+          );
+          ctx.fillStyle = "#000";
+          ctx.fillRect(playerScreenX + 15, this.player.y + 25, 12, 12);
+          ctx.fillRect(playerScreenX + 33, this.player.y + 25, 12, 12);
+          ctx.fillStyle = "#FFF";
+          ctx.fillRect(playerScreenX + 20, this.player.y + 60, 20, 5);
+        }
+
+        gameLoop(currentTime, ctx, width, height) {
+          if (!this.running) return;
+
+          const deltaTime = currentTime - this.lastTime;
+          this.lastTime = currentTime;
+
+          // Update FPS
+          this.frameCount++;
+          if (currentTime - this.fpsUpdateTime > 1000) {
+            this.fps = this.frameCount;
+            this.frameCount = 0;
+            this.fpsUpdateTime = currentTime;
+          }
+
+          this.update(deltaTime);
+          this.renderCanvas(ctx, width, height);
+
+          requestAnimationFrame((time) =>
+            this.gameLoop(time, ctx, width, height)
+          );
+        }
+
+        start(ctx, width, height) {
+          this.running = true;
+          this.lastTime = performance.now();
+          this.fpsUpdateTime = performance.now();
+          requestAnimationFrame((time) =>
+            this.gameLoop(time, ctx, width, height)
+          );
+        }
+
+        stop() {
+          this.running = false;
+        }
+
+        movePlayer(direction) {
+          this.player.vx = direction * this.player.speed;
+        }
+
+        stopPlayer() {
+          this.player.vx = 0;
         }
       }
 
-      // === Smooth scrolling with easing ===
-      let offsetX = 0;
-      let targetOffsetX = 0;
-      let velocity = 0;
-      let lastTime = performance.now();
-      const maxCellWidth = 200;
+      // ============================================
+      // REACT COMPONENT
+      // ============================================
+      function JapaneseCityGame() {
+        const canvasRef = useRef(null);
+        const spriteContainerRef = useRef(null);
+        const cellNumbersRef = useRef(null);
+        const engineRef = useRef(null);
 
-      function loop(now) {
-        const dt = Math.min(now - lastTime, 50); // Cap delta time
-        lastTime = now;
+        const [currentCell, setCurrentCell] = useState(0);
+        const [collision, setCollision] = useState(null);
+        const [showDialog, setShowDialog] = useState(false);
+        const [fps, setFps] = useState(0);
+        const [score, setScore] = useState(0);
+        const keysPressed = useRef(new Set());
 
-        drawClouds(dt);
+        useEffect(() => {
+          const canvas = canvasRef.current;
+          const ctx = canvas.getContext("2d", { alpha: true });
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
 
-        // Smooth easing towards target
-        const diff = targetOffsetX - offsetX;
-        if (Math.abs(diff) > 0.1) {
-          const t = Math.min(dt / 300, 1); // Easing over ~300ms
-          offsetX += diff * easeOutQuad(t);
-        } else {
-          offsetX = targetOffsetX;
-        }
+          const engine = new OptimizedGameEngine();
+          engineRef.current = engine;
 
-        // Clamp
-        const maxOffset = 0;
-        const minOffset = -cols * cellWidth + window.innerWidth;
-        if (offsetX > maxOffset) offsetX = maxOffset;
-        if (offsetX < minOffset) offsetX = minOffset;
+          engine.onCellChange = (cellIndex) => {
+            setCurrentCell(cellIndex);
+          };
 
-        grid.style.transform = `translateX(${offsetX}px)`;
+          engine.onCollision = (collisionData) => {
+            setCollision(collisionData);
+            if (collisionData.type === "item") {
+              setScore(engine.player.score);
+              setTimeout(() => setCollision(null), 1500);
+            }
+          };
 
-        requestAnimationFrame(loop);
+          // Start game loop
+          engine.start(ctx, canvas.width, canvas.height);
+
+          // FPS update interval
+          const fpsInterval = setInterval(() => {
+            setFps(engine.fps);
+          }, 500);
+
+          // Keyboard controls
+          const handleKeyDown = (e) => {
+            keysPressed.current.add(e.key);
+            if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
+              engine.movePlayer(-1);
+            } else if (
+              e.key === "ArrowRight" ||
+              e.key === "d" ||
+              e.key === "D"
+            ) {
+              engine.movePlayer(1);
+            } else if (e.key === "Enter" || e.key === " ") {
+              if (
+                collision &&
+                (collision.target.interactable || collision.target.hasDialog)
+              ) {
+                setShowDialog(true);
+              }
+            }
+          };
+
+          const handleKeyUp = (e) => {
+            keysPressed.current.delete(e.key);
+            const leftKeys = ["ArrowLeft", "a", "A"];
+            const rightKeys = ["ArrowRight", "d", "D"];
+
+            if (
+              leftKeys.includes(e.key) &&
+              !rightKeys.some((k) => keysPressed.current.has(k))
+            ) {
+              engine.stopPlayer();
+            } else if (
+              rightKeys.includes(e.key) &&
+              !leftKeys.some((k) => keysPressed.current.has(k))
+            ) {
+              engine.stopPlayer();
+            }
+          };
+
+          window.addEventListener("keydown", handleKeyDown);
+          window.addEventListener("keyup", handleKeyUp);
+
+          // Handle resize
+          const handleResize = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+          };
+          window.addEventListener("resize", handleResize);
+
+          // Update sprite sheet and cell numbers position
+          const updateSpritePosition = () => {
+            if (spriteContainerRef.current && cellNumbersRef.current) {
+              const offset = -engine.camera.x;
+              spriteContainerRef.current.style.transform = `translate3d(${offset}px, 0, 0)`;
+              cellNumbersRef.current.style.transform = `translate3d(${offset}px, 0, 0)`;
+            }
+            requestAnimationFrame(updateSpritePosition);
+          };
+          updateSpritePosition();
+
+          return () => {
+            engine.stop();
+            clearInterval(fpsInterval);
+            window.removeEventListener("keydown", handleKeyDown);
+            window.removeEventListener("keyup", handleKeyUp);
+            window.removeEventListener("resize", handleResize);
+          };
+        }, []);
+
+        // Generate cell numbers (memoized for performance)
+        const cellNumbers = useMemo(() => {
+          const cells = [];
+          const totalCells = Math.floor(48400 / 200);
+          for (let i = 0; i < totalCells; i++) {
+            cells.push(
+              <div
+                key={i}
+                className={`cell-number ${i === currentCell ? "active" : ""}`}
+                style={{ left: `${i * 200}px` }}
+              >
+                #{i + 1}
+              </div>
+            );
+          }
+          return cells;
+        }, [currentCell]);
+
+        return (
+          <div className="game-container">
+            {/* Layer 1: Sky */}
+            <div className="layer-sky"></div>
+
+            {/* Layer 2: Fixed background (mountains/clouds) */}
+            <div className="layer-bg-fixed"></div>
+
+            {/* Layer 3: Scrolling sprite sheet */}
+            <div className="layer-sprite-container" ref={spriteContainerRef}>
+              <div className="layer-sprite-sheet"></div>
+            </div>
+
+            {/* Cell numbers overlay */}
+            <div className="cell-numbers" ref={cellNumbersRef}>
+              {cellNumbers}
+            </div>
+
+            {/* Canvas for game objects */}
+            <canvas ref={canvasRef} className="game-canvas" />
+
+            {/* UI Overlay */}
+            <div className="ui-overlay">
+              <div className="ui-panel controls">
+                <div className="controls-title">Controls:</div>
+                <div>← → or A/D: Move</div>
+                <div>Enter/Space: Interact</div>
+              </div>
+
+              <div className="ui-panel stats">
+                <div className="stat-row">
+                  <span className="stat-label">FPS:</span>
+                  <span className="stat-value">{fps}</span>
+                </div>
+                <div className="stat-row">
+                  <span className="stat-label">Score:</span>
+                  <span className="stat-value">{score}</span>
+                </div>
+                <div className="stat-row">
+                  <span className="stat-label">Cell:</span>
+                  <span className="stat-value">#{currentCell + 1}</span>
+                </div>
+                <div className="stat-row">
+                  <span className="stat-label">Position:</span>
+                  <span className="stat-value">
+                    {Math.round(engineRef.current?.player.x || 0)}px
+                  </span>
+                </div>
+              </div>
+
+              <div className="current-cell">
+                Current Cell: #{currentCell + 1}
+              </div>
+
+              {collision && (
+                <div className="collision-indicator">
+                  <span>{collision.target.icon || "📍"}</span>
+                  {collision.type === "building" && (
+                    <>
+                      {collision.target.nameEn} ({collision.target.name})
+                    </>
+                  )}
+                  {collision.type === "item" && (
+                    <span>+{collision.target.points} points!</span>
+                  )}
+                  {collision.type === "npc" && <span>Met NPC!</span>}
+                </div>
+              )}
+
+              {collision &&
+                (collision.target.interactable || collision.target.hasDialog) &&
+                !showDialog && (
+                  <button
+                    className="interact-button"
+                    onClick={() => setShowDialog(true)}
+                  >
+                    {collision.type === "building" ? "Vào" : "Talk"}
+                  </button>
+                )}
+
+              {showDialog && collision && (
+                <div className="dialog-overlay">
+                  <div className="dialog-box">
+                    <div className="dialog-title">
+                      <span className="dialog-icon">
+                        {collision.target.icon || "👤"}
+                      </span>
+                      {collision.type === "building"
+                        ? collision.target.nameEn
+                        : "NPC"}
+                    </div>
+
+                    <div className="dialog-content">
+                      {collision.type === "npc" && collision.target.dialog && (
+                        <>
+                          <div className="dialog-jp">
+                            {collision.target.dialog.jp}
+                          </div>
+                          <div className="dialog-en">
+                            {collision.target.dialog.en}
+                          </div>
+                        </>
+                      )}
+                      {collision.type === "building" && (
+                        <>
+                          <div className="dialog-jp">いらっしゃいませ！</div>
+                          <div className="dialog-en">Welcome!</div>
+                        </>
+                      )}
+                    </div>
+
+                    <div className="dialog-options">
+                      <button className="option-button">
+                        A) ありがとうございます (Thank you)
+                      </button>
+                      <button className="option-button">
+                        B) これはいくらですか？ (How much is this?)
+                      </button>
+                      <button className="option-button">
+                        C) また来ます (I'll come again)
+                      </button>
+                    </div>
+
+                    <button
+                      className="close-button"
+                      onClick={() => setShowDialog(false)}
+                    >
+                      Close / 閉じる
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Mobile Controls */}
+              <div className="mobile-controls">
+                <button
+                  className="control-btn"
+                  onTouchStart={() => engineRef.current?.movePlayer(-1)}
+                  onTouchEnd={() => engineRef.current?.stopPlayer()}
+                  onMouseDown={() => engineRef.current?.movePlayer(-1)}
+                  onMouseUp={() => engineRef.current?.stopPlayer()}
+                  onMouseLeave={() => engineRef.current?.stopPlayer()}
+                >
+                  ←
+                </button>
+
+                <button
+                  className="control-btn"
+                  onTouchStart={() => engineRef.current?.movePlayer(1)}
+                  onTouchEnd={() => engineRef.current?.stopPlayer()}
+                  onMouseDown={() => engineRef.current?.movePlayer(1)}
+                  onMouseUp={() => engineRef.current?.stopPlayer()}
+                  onMouseLeave={() => engineRef.current?.stopPlayer()}
+                >
+                  →
+                </button>
+              </div>
+            </div>
+          </div>
+        );
       }
 
-      requestAnimationFrame(loop);
-
-      // === Controls ===
-      const scrollAmount = 5; // pixels per press (giảm số này để scroll chậm hơn)
-
-      function scrollLeft() {
-        targetOffsetX = Math.min(targetOffsetX + scrollAmount, 0);
-      }
-
-      function scrollRight() {
-        const maxOffset = -cols * cellWidth + window.innerWidth;
-        targetOffsetX = Math.max(targetOffsetX - scrollAmount, maxOffset);
-      }
-
-      // Mouse controls
-      leftBtn.addEventListener("mousedown", scrollLeft);
-      rightBtn.addEventListener("mousedown", scrollRight);
-
-      // Touch controls
-      leftBtn.addEventListener("touchstart", (e) => {
-        e.preventDefault();
-        scrollLeft();
-      });
-
-      rightBtn.addEventListener("touchstart", (e) => {
-        e.preventDefault();
-        scrollRight();
-      });
-
-      // Keyboard controls
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "ArrowLeft") scrollLeft();
-        if (e.key === "ArrowRight") scrollRight();
-      });
+      // Render app
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<JapaneseCityGame />);
     </script>
   </body>
 </html>

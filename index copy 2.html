@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>City Side-Scrolling</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        height: 100%;
+        width: 100%;
+        background: #87ceeb;
+      }
+
+      canvas {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+      }
+
+      #gridContainer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: grid;
+        grid-template-rows: 400px;
+        grid-template-columns: repeat(160, 200px);
+        transform: translateX(0);
+        z-index: 1;
+        will-change: transform;
+      }
+
+      .cell {
+        width: 200px;
+        height: 400px;
+        background-image: url("./city/city1.svg");
+        background-size: 32000px 400px;
+        background-repeat: no-repeat;
+        filter: drop-shadow(3px 0 0 white) drop-shadow(-3px 0 0 white)
+          drop-shadow(0 3px 0 white) drop-shadow(0 -3px 0 white);
+      }
+
+      #controls {
+        position: fixed;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+        z-index: 2;
+      }
+
+      button {
+        padding: 8px 14px;
+        border: none;
+        border-radius: 8px;
+        background: #333;
+        color: #fff;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      /* Mobile landscape */
+      @media (max-width: 1024px) and (orientation: landscape) {
+        #gridContainer {
+          grid-template-rows: 200px;
+          grid-template-columns: repeat(160, 100px);
+        }
+
+        .cell {
+          width: 100px;
+          height: 200px;
+          background-size: 16000px 200px;
+        }
+
+        #controls {
+          bottom: 5px;
+          gap: 5px;
+        }
+
+        button {
+          padding: 6px 10px;
+          font-size: 14px;
+        }
+      }
+
+      /* Mobile portrait */
+      @media (max-width: 768px) and (orientation: portrait) {
+        #orientationOverlay {
+          display: flex;
+        }
+      }
+
+      @media (max-width: 1024px) and (orientation: portrait) {
+        #orientationOverlay {
+          display: flex;
+        }
+      }
+
+      #orientationOverlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.9);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        text-align: center;
+      }
+
+      #orientationOverlay h2 {
+        color: #fff;
+        margin: 0 0 20px 0;
+        font-size: 24px;
+      }
+
+      #orientationOverlay p {
+        color: #ccc;
+        margin: 0;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="bgCanvas"></canvas>
+    <div id="gridContainer"></div>
+    <div id="controls">
+      <button id="left">←</button>
+      <button id="right">→</button>
+    </div>
+
+    <div id="orientationOverlay">
+      <h2>⤴️ Xoay màn hình</h2>
+      <p>Vui lòng xoay thiết bị để chơi</p>
+    </div>
+
+    <script>
+      // === Easing function ===
+      function easeOutQuad(t) {
+        return 1 - (1 - t) * (1 - t);
+      }
+
+      // === Orientation check ===
+      function checkOrientation() {
+        const overlay = document.getElementById("orientationOverlay");
+        const isMobile = /iPhone|iPad|Android|Mobile/i.test(
+          navigator.userAgent
+        );
+        const isPortrait = window.innerHeight > window.innerWidth;
+
+        if (isMobile && isPortrait) {
+          overlay.style.display = "flex";
+        } else {
+          overlay.style.display = "none";
+        }
+      }
+
+      window.addEventListener("orientationchange", checkOrientation);
+      window.addEventListener("resize", checkOrientation);
+      checkOrientation();
+
+      // === Grid setup ===
+      const grid = document.getElementById("gridContainer");
+      const leftBtn = document.getElementById("left");
+      const rightBtn = document.getElementById("right");
+
+      const cols = 160;
+      const cellWidth = 200;
+
+      // Create grid cells
+      for (let i = 0; i < cols; i++) {
+        const cell = document.createElement("div");
+        cell.className = "cell";
+        cell.style.backgroundPositionX = `-${i * cellWidth}px`;
+        grid.appendChild(cell);
+      }
+
+      // === Canvas background with clouds ===
+      const canvas = document.getElementById("bgCanvas");
+      const ctx = canvas.getContext("2d");
+      let clouds = [];
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        if (clouds.length === 0) {
+          for (let i = 0; i < 8; i++) {
+            clouds.push({
+              x: Math.random() * canvas.width,
+              y: (Math.random() * canvas.height) / 2,
+              speed: 0.2 + Math.random() * 0.4,
+              size: 80 + Math.random() * 100,
+            });
+          }
+        }
+      }
+
+      window.addEventListener("resize", resizeCanvas);
+      resizeCanvas();
+
+      function drawClouds(dt) {
+        ctx.fillStyle = "#87CEEB";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "rgba(255,255,255,0.8)";
+
+        for (let c of clouds) {
+          ctx.beginPath();
+          ctx.ellipse(c.x, c.y, c.size, c.size / 2, 0, 0, Math.PI * 2);
+          ctx.fill();
+          c.x += c.speed * dt * 0.05;
+          if (c.x - c.size > canvas.width) c.x = -c.size;
+        }
+      }
+
+      // === Smooth scrolling with easing ===
+      let offsetX = 0;
+      let targetOffsetX = 0;
+      let velocity = 0;
+      let lastTime = performance.now();
+      const maxCellWidth = 200;
+
+      function loop(now) {
+        const dt = Math.min(now - lastTime, 50); // Cap delta time
+        lastTime = now;
+
+        drawClouds(dt);
+
+        // Smooth easing towards target
+        const diff = targetOffsetX - offsetX;
+        if (Math.abs(diff) > 0.1) {
+          const t = Math.min(dt / 300, 1); // Easing over ~300ms
+          offsetX += diff * easeOutQuad(t);
+        } else {
+          offsetX = targetOffsetX;
+        }
+
+        // Clamp
+        const maxOffset = 0;
+        const minOffset = -cols * cellWidth + window.innerWidth;
+        if (offsetX > maxOffset) offsetX = maxOffset;
+        if (offsetX < minOffset) offsetX = minOffset;
+
+        grid.style.transform = `translateX(${offsetX}px)`;
+
+        requestAnimationFrame(loop);
+      }
+
+      requestAnimationFrame(loop);
+
+      // === Controls ===
+      const scrollAmount = 5; // pixels per press (giảm số này để scroll chậm hơn)
+
+      function scrollLeft() {
+        targetOffsetX = Math.min(targetOffsetX + scrollAmount, 0);
+      }
+
+      function scrollRight() {
+        const maxOffset = -cols * cellWidth + window.innerWidth;
+        targetOffsetX = Math.max(targetOffsetX - scrollAmount, maxOffset);
+      }
+
+      // Mouse controls
+      leftBtn.addEventListener("mousedown", scrollLeft);
+      rightBtn.addEventListener("mousedown", scrollRight);
+
+      // Touch controls
+      leftBtn.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        scrollLeft();
+      });
+
+      rightBtn.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        scrollRight();
+      });
+
+      // Keyboard controls
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft") scrollLeft();
+        if (e.key === "ArrowRight") scrollRight();
+      });
+    </script>
+  </body>
+</html>

@@ -2,8 +2,8 @@ from PIL import Image, ImageFilter, ImageChops
 import os
 
 # === ⚙️ CẤU HÌNH TÙY BIẾN ===
-input_folder = "input"                  # Thư mục ảnh gốc
-output_folder = "output"              # Thư mục lưu kết quả
+input_folder = "output2"                  # Thư mục ảnh gốc
+output_folder = "output3"              # Thư mục lưu kết quả
 os.makedirs(output_folder, exist_ok=True)
 
 border_size = 10                      # 🔧 Độ dày viền (px)

@@ -2,13 +2,13 @@ from PIL import Image, ImageFilter, ImageChops
 import os
 
 # === ⚙️ CẤU HÌNH TÙY BIẾN ===
-input_folder = "input"                  # Thư mục ảnh gốc
-output_folder = "output"              # Thư mục lưu kết quả
+input_folder = "output"                  # Thư mục ảnh gốc
+output_folder = "output2"              # Thư mục lưu kết quả
 os.makedirs(output_folder, exist_ok=True)
 
-border_size = 10                      # 🔧 Độ dày viền (px)
+border_size = 2                      # 🔧 Độ dày viền (px)
 softness = 0                          # 🔧 Độ mờ viền (0 = sắc nét, >0 = glow nhẹ)
-border_color = (255, 255, 255, 255)   # 🔧 Màu viền (RGBA, trắng mặc định)
+border_color = (0, 0, 0, 255)   # 🔧 Màu viền (RGBA, trắng mặc định)
 
 # ==============================
 

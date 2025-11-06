@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Phân tích phát âm tiếng Nhật - OJAD Style</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", "Hiragino Sans", "Yu Gothic", "Meiryo",
+          sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      h1 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 2em;
+      }
+
+      .input-group {
+        margin-bottom: 30px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+        color: #555;
+        font-weight: 600;
+      }
+
+      textarea {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        font-size: 18px;
+        resize: vertical;
+        min-height: 80px;
+        font-family: "Yu Gothic", "Meiryo", sans-serif;
+        transition: border-color 0.3s;
+      }
+
+      textarea:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      button {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .loading {
+        text-align: center;
+        color: #667eea;
+        font-size: 18px;
+        margin: 20px 0;
+        display: none;
+      }
+
+      .loading.show {
+        display: block;
+      }
+
+      .result {
+        margin-top: 30px;
+        display: none;
+      }
+
+      .result.show {
+        display: block;
+      }
+
+      .result-section {
+        margin-bottom: 30px;
+        padding: 30px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        border: 2px solid #e5e7eb;
+      }
+
+      .result-title {
+        font-size: 1.3em;
+        color: #333;
+        margin-bottom: 20px;
+        font-weight: 600;
+        text-align: center;
+      }
+
+      /* OJAD-style pitch display */
+      .pitch-wrapper {
+        background: white;
+        padding: 40px 20px;
+        border-radius: 10px;
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .accent-display {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        font-size: 36px;
+        font-family: "Yu Gothic", "Hiragino Sans", "MS Gothic", sans-serif;
+        font-weight: 500;
+        line-height: 1.8;
+        letter-spacing: 2px;
+        margin: 20px 0;
+      }
+
+      .mora-wrapper {
+        position: relative;
+        display: inline-block;
+        padding: 0;
+        margin: 0;
+      }
+
+      .mora-char {
+        display: inline-block;
+        min-width: 0.8em;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+      }
+
+      /* Đường pitch trên đầu (giống OJAD) */
+      .pitch-line {
+        position: absolute;
+        height: 3px;
+        background: #000;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1;
+      }
+
+      .pitch-line.high {
+        top: -10px;
+        background: #2563eb;
+      }
+
+      .pitch-line.low {
+        top: 20px;
+        background: #333;
+      }
+
+      /* Đường dọc chuyển tiếp */
+      .pitch-transition {
+        position: absolute;
+        width: 3px;
+        background: #000;
+        right: -2px;
+        z-index: 1;
+      }
+
+      .pitch-transition.down {
+        top: -10px;
+        height: 30px;
+        background: #dc2626;
+      }
+
+      .pitch-transition.up {
+        top: 20px;
+        height: 30px;
+        background: #2563eb;
+      }
+
+      /* Màu chữ theo tone */
+      .mora-char.low {
+        color: #333;
+      }
+
+      .mora-char.high {
+        color: #2563eb;
+        font-weight: 600;
+      }
+
+      .mora-char.drop {
+        color: #dc2626;
+        font-weight: 700;
+      }
+
+      .mora-char.unvoiced {
+        color: #9ca3af;
+        opacity: 0.7;
+      }
+
+      .original-text {
+        text-align: center;
+        color: #666;
+        font-size: 24px;
+        margin-top: 30px;
+        padding: 15px;
+        background: #f0f0f0;
+        border-radius: 8px;
+        font-family: "Yu Gothic", "Meiryo", sans-serif;
+        border: 1px solid #ddd;
+      }
+
+      .legend {
+        display: flex;
+        justify-content: center;
+        gap: 25px;
+        margin-top: 20px;
+        font-size: 15px;
+        flex-wrap: wrap;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 15px;
+        background: white;
+        border-radius: 6px;
+        border: 1px solid #e5e7eb;
+      }
+
+      .legend-color {
+        width: 24px;
+        height: 24px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+      }
+
+      .error {
+        background: #fee;
+        color: #c33;
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 20px;
+        display: none;
+        border: 2px solid #fcc;
+      }
+
+      .error.show {
+        display: block;
+      }
+
+      .note {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 20px;
+        font-size: 14px;
+        color: #856404;
+      }
+
+      .info-box {
+        background: #e7f3ff;
+        border-left: 4px solid #2563eb;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        color: #1e40af;
+      }
+
+      /* Canvas pitch pattern */
+      #pitchCanvas {
+        width: 100%;
+        max-width: 800px;
+        height: 180px;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        background: white;
+        margin: 0 auto;
+        display: block;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 20px;
+        }
+
+        .accent-display {
+          font-size: 28px;
+        }
+
+        .legend {
+          gap: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🗾 Phân tích phát âm tiếng Nhật</h1>
+
+      <div class="info-box">
+        ℹ️ Công cụ này mô phỏng cách hiển thị trọng âm của
+        <strong>OJAD</strong> (Online Japanese Accent Dictionary) của Đại học
+        Tokyo.
+      </div>
+
+      <div class="input-group">
+        <label for="japaneseInput">Nhập câu tiếng Nhật:</label>
+        <textarea id="japaneseInput" placeholder="例：交番に行きました">
+交番に行きました</textarea
+        >
+      </div>
+
+      <button id="analyzeBtn" onclick="analyzeText()">🔍 Phân tích</button>
+
+      <div class="loading" id="loading">⏳ Đang phân tích...</div>
+
+      <div class="error" id="error"></div>
+
+      <div class="result" id="result">
+        <div class="result-section">
+          <div class="result-title">🎯 Mẫu trọng âm (Accent Pattern)</div>
+          <div class="pitch-wrapper">
+            <div id="accentDisplay" class="accent-display"></div>
+          </div>
+          <div id="originalText" class="original-text"></div>
+          <div class="legend">
+            <div class="legend-item">
+              <div class="legend-color" style="background: #2563eb"></div>
+              <span>Cao (H - High)</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: #dc2626"></div>
+              <span>Rơi trọng âm (Nucleus)</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: #333"></div>
+              <span>Thấp (L - Low)</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color" style="background: #9ca3af"></div>
+              <span>Vô thanh (Devoiced)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="result-section">
+          <div class="result-title">📊 Biểu đồ cao độ (Pitch Graph)</div>
+          <canvas id="pitchCanvas"></canvas>
+        </div>
+      </div>
+
+      <div class="note">
+        📌 <strong>Lưu ý:</strong> Do sử dụng CORS proxy công khai, tốc độ có
+        thể chậm. Để sử dụng ổn định hơn, ông nên deploy backend proxy riêng
+        hoặc dùng browser extension để bypass CORS.
+      </div>
+    </div>
+
+    <script>
+      async function analyzeText() {
+        const text = document.getElementById("japaneseInput").value.trim();
+        const loading = document.getElementById("loading");
+        const result = document.getElementById("result");
+        const error = document.getElementById("error");
+        const analyzeBtn = document.getElementById("analyzeBtn");
+
+        if (!text) {
+          showError("Vui lòng nhập văn bản tiếng Nhật!");
+          return;
+        }
+
+        // Reset
+        loading.classList.add("show");
+        result.classList.remove("show");
+        error.classList.remove("show");
+        analyzeBtn.disabled = true;
+
+        try {
+          const formData = new URLSearchParams({
+            _method: "POST",
+            "data[Phrasing][text]": text,
+            "data[Phrasing][curve]": "advanced",
+            "data[Phrasing][accent]": "advanced",
+            "data[Phrasing][accent_mark]": "all",
+            "data[Phrasing][estimation]": "crf",
+            "data[Phrasing][analyze]": "true",
+            "data[Phrasing][phrase_component]": "visible",
+            "data[Phrasing][param]": "invisible",
+            "data[Phrasing][subscript]": "visible",
+            "data[Phrasing][jeita]": "invisible",
+          });
+
+          const response = await fetch(
+            "https://corsproxy.io/?" +
+              encodeURIComponent(
+                "https://www.gavo.t.u-tokyo.ac.jp/ojad/phrasing/index"
+              ),
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body: formData.toString(),
+            }
+          );
+
+          if (!response.ok) throw new Error("Request failed");
+
+          const html = await response.text();
+          const data = parseOJADResponse(html);
+          displayResults(data);
+        } catch (err) {
+          showError(
+            "❌ Lỗi khi kết nối đến OJAD. Vui lòng thử lại sau. Error: " +
+              err.message
+          );
+          console.error(err);
+        } finally {
+          loading.classList.remove("show");
+          analyzeBtn.disabled = false;
+        }
+      }
+
+      function parseOJADResponse(html) {
+        const pitchMatch = html.match(
+          /set_accent_curve_phrase[^[]*\[([^\]]+)\]/
+        );
+        const pitchPattern = pitchMatch
+          ? pitchMatch[1].split(",").map(Number)
+          : [];
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+
+        const accentTextDiv = doc.querySelector(".phrasing_text");
+        const subscriptDiv = doc.querySelector(".phrasing_subscript");
+
+        const moras = [];
+        if (accentTextDiv) {
+          const spans = accentTextDiv.querySelectorAll('span[class*="mola_"]');
+          spans.forEach((span) => {
+            const charSpan = span.querySelector(".char");
+            if (charSpan && charSpan.textContent.trim()) {
+              const classes = span.className;
+              let accentType = "low";
+
+              if (classes.includes("accent_top")) {
+                accentType = "drop";
+              } else if (classes.includes("accent_plain")) {
+                accentType = "high";
+              } else if (classes.includes("unvoiced")) {
+                accentType = "unvoiced";
+              }
+
+              moras.push({
+                char: charSpan.textContent,
+                accentType: accentType,
+              });
+            }
+          });
+        }
+
+        const originalText = subscriptDiv
+          ? subscriptDiv.textContent.trim()
+          : "";
+
+        return { pitchPattern, moras, originalText };
+      }
+
+      function displayResults(data) {
+        // Hiển thị accent pattern kiểu OJAD
+        displayAccentPattern(data.moras, data.pitchPattern);
+
+        // Vẽ pitch graph
+        drawPitchPattern(data.pitchPattern);
+
+        // Hiển thị văn bản gốc
+        document.getElementById("originalText").textContent = data.originalText;
+
+        document.getElementById("result").classList.add("show");
+      }
+
+      function displayAccentPattern(moras, pitchPattern) {
+        const displayDiv = document.getElementById("accentDisplay");
+        displayDiv.innerHTML = "";
+
+        moras.forEach((mora, i) => {
+          const wrapper = document.createElement("div");
+          wrapper.className = "mora-wrapper";
+
+          const charSpan = document.createElement("span");
+          charSpan.className = `mora-char ${mora.accentType}`;
+          charSpan.textContent = mora.char;
+
+          wrapper.appendChild(charSpan);
+
+          // Vẽ đường pitch ngang
+          if (pitchPattern[i] !== undefined) {
+            const pitchLine = document.createElement("div");
+            pitchLine.className = `pitch-line ${
+              pitchPattern[i] === 1 ? "high" : "low"
+            }`;
+            pitchLine.style.width = "100%";
+            wrapper.appendChild(pitchLine);
+          }
+
+          // Vẽ đường chuyển tiếp
+          if (i < moras.length - 1 && pitchPattern[i] !== pitchPattern[i + 1]) {
+            const transition = document.createElement("div");
+            transition.className = `pitch-transition ${
+              pitchPattern[i] === 1 ? "down" : "up"
+            }`;
+            wrapper.appendChild(transition);
+          }
+
+          displayDiv.appendChild(wrapper);
+        });
+      }
+
+      function drawPitchPattern(pattern) {
+        const canvas = document.getElementById("pitchCanvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = canvas.offsetWidth * 2;
+        canvas.height = 360;
+        ctx.scale(2, 2);
+
+        const width = canvas.width / 2;
+        const height = canvas.height / 2;
+
+        ctx.clearRect(0, 0, width, height);
+
+        if (!pattern || pattern.length === 0) return;
+
+        const padding = 50;
+        const graphWidth = width - padding * 2;
+        const graphHeight = height - padding * 2;
+        const step = graphWidth / (pattern.length - 1 || 1);
+
+        // Vẽ grid
+        ctx.strokeStyle = "#e5e7eb";
+        ctx.lineWidth = 1;
+
+        // High line
+        ctx.beginPath();
+        ctx.moveTo(padding, padding);
+        ctx.lineTo(width - padding, padding);
+        ctx.stroke();
+
+        // Low line
+        ctx.beginPath();
+        ctx.moveTo(padding, padding + graphHeight);
+        ctx.lineTo(width - padding, padding + graphHeight);
+        ctx.stroke();
+
+        // Vẽ đường pitch
+        ctx.strokeStyle = "#2563eb";
+        ctx.lineWidth = 3;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.beginPath();
+
+        pattern.forEach((pitch, i) => {
+          const x = padding + i * step;
+          const y = pitch === 1 ? padding : padding + graphHeight;
+
+          if (i === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+        });
+
+        ctx.stroke();
+
+        // Vẽ điểm
+        pattern.forEach((pitch, i) => {
+          const x = padding + i * step;
+          const y = pitch === 1 ? padding : padding + graphHeight;
+
+          ctx.fillStyle = pitch === 1 ? "#2563eb" : "#dc2626";
+          ctx.beginPath();
+          ctx.arc(x, y, 5, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Viền trắng
+          ctx.strokeStyle = "#fff";
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        });
+
+        // Label
+        ctx.fillStyle = "#666";
+        ctx.font = "14px sans-serif";
+        ctx.textAlign = "right";
+        ctx.fillText("高 (H)", padding - 10, padding + 5);
+        ctx.fillText("低 (L)", padding - 10, padding + graphHeight + 5);
+
+        // Số thứ tự mora
+        ctx.textAlign = "center";
+        ctx.font = "12px sans-serif";
+        pattern.forEach((pitch, i) => {
+          const x = padding + i * step;
+          ctx.fillText(i + 1, x, height - 20);
+        });
+      }
+
+      function showError(message) {
+        const errorDiv = document.getElementById("error");
+        errorDiv.textContent = message;
+        errorDiv.classList.add("show");
+      }
+
+      // Enter để submit
+      document
+        .getElementById("japaneseInput")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            analyzeText();
+          }
+        });
+    </script>
+  </body>
+</html>
